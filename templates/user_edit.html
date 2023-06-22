@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    {#    <meta name="viewport" content="width=device-width, initial-scale=1">#}
+    <meta name="viewport" content="width=1024, user-scalable=yes">
+    <title>user_edit_page</title>
+    <link rel="stylesheet" href="../static/css/user_base.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="../static/css/user_edit.css">
+    {% block css %}{% endblock %}
+    {% block js %}
+        <script>
+            function uploadAvatar() {
+                $('#fileInput').click();
+            }
+
+            function loadAvatar(event) {
+                const avatar = $('#avatar');
+                avatar.attr('src', URL.createObjectURL(event.target.files[0]));
+
+                // Upload the file using jQuery Ajax
+                const formData = new FormData();
+                formData.append('file', event.target.files[0]);
+                $.ajax({
+                    url: '/nav_user/upload_avatar',
+                    type: 'POST',
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    success: function (response) {
+                        if (response.success) {
+                            avatar.attr('src', '../static/uploads/' + response.filename);
+                        } else {
+                            console.error('Error uploading file:', response.error);
+                        }
+                    },
+                    error: function () {
+                        console.error('Error uploading file: Server error');
+                    }
+                });
+            }
+
+            $(document).ready(function () {
+                editUserInfo();
+            });
+
+            function editUserInfo() {
+                // Use jQuery to send AJAX requests to get user information
+                $.getJSON('/nav_user/get_customer_info', function (data) {
+                    // Fill the input box with user information
+
+                    $('#table-cell-ID').text(data.customer_id || '');
+                    $('#username').val(data.username || '');
+                    $('#email').val(data.email || '');
+                    $('#phone').val(data.phone || '');
+                    $('#avatar').attr('src', '../' + data.avatar_path || '');
+                    $('input[name="gender"][value="' + data.gender + '"]').prop('checked', true);
+                    if (data.birthday) {
+                        var birthday = new Date(data.birthday);
+                        var year = birthday.getFullYear();
+                        var month = ('0' + (birthday.getMonth() + 1)).slice(-2);
+                        var day = ('0' + birthday.getDate()).slice(-2);
+                        var birthdayStr = year + '-' + month + '-' + day;
+                        $('#birthday').val(birthdayStr);
+                    } else {
+                        $('#birthday').val('');
+                    }
+                });
+            }
+
+
+            function submitForm() {
+                const formData = $('#update-form').serialize();
+
+                const usernameInput = $('#username');
+                const emailInput = $('#email');
+                const phoneInput = $('#phone');
+                const passwordInput = $('#password');
+
+                // Use jQuery to send AJAX requests to submit form data
+                $.ajax({
+                    url: '/nav_user/update',
+                    method: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        // Clear previous error messages
+                        $('#username-error').text('');
+                        $('#email-error').text('');
+                        $('#phone-error').text('');
+                        $('#password-error').text('');
+
+                        // Removes the incorrect style of the input box
+                        usernameInput.removeClass('error');
+                        emailInput.removeClass('error');
+                        phoneInput.removeClass('error');
+                        passwordInput.removeClass('error');
+
+                        if (response.success) {
+                            window.alert('Information updated successfully!');
+                        } else {
+                            $('input').click(function () {
+                                const inputId = $(this).attr('id');
+                                const errorId = inputId + '-error';
+                                $(this).removeClass('error error-message1 error-message2 error-message3 error-message4 error-message5 error-message6');
+                                $('#' + errorId).removeClass('show').text('').removeClass('error-message');
+                            });
+
+                            function showError(errorElement, errorMessage, inputElement) {
+                                errorElement.text(errorMessage).addClass('error-message show');
+                                inputElement.addClass('error');
+                                setTimeout(function () {
+                                    errorElement.removeClass('show');
+                                    setTimeout(function () {
+                                        errorElement.text('').removeClass('error-message');
+                                    }, 500); // Matches the transition time in CSS
+                                }, 2500);
+                            }
+
+                            if (response.errors.username) {
+                                showError($('#username-error'), response.errors.username, usernameInput);
+                            }
+                            if (response.errors.email) {
+                                showError($('#email-error'), response.errors.email, emailInput);
+                            }
+                            if (response.errors.phone) {
+                                showError($('#phone-error'), response.errors.phone, phoneInput);
+                            }
+                            if (response.errors.password) {
+                                showError($('#password-error'), response.errors.password, passwordInput);
+                            }
+
+
+                            setTimeout(function () {
+                                usernameInput.removeClass('error');
+                                emailInput.removeClass('error');
+                                phoneInput.removeClass('error');
+                                passwordInput.removeClass('error');
+                            }, 2000);
+                        }
+                    }
+                });
+            }
+        </script>
+    {% endblock %}
+</head>
+<body>
+<header>
+    <a href="{{ url_for('home.home_page') }}" class="logo">Logo</a>
+    <div class="nav-wrapper">
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/home.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Home</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/collection.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Collection</div>
+            </div>
+        </a>
+        <a href="{{ url_for('cart.cart_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/cart.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Cart</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/history.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">History</div>
+            </div>
+        </a>
+        <a href="{{ url_for('order.order_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/order.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Order</div>
+            </div>
+        </a>
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('nav_user.info') }}">
+                    <img src="../static/icon/navbar/user.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+{% block content %}
+    <div class="table-container">
+        <form id="update-form" method="POST">
+            <div class="information">
+                <div class="avatar-container">
+                    <img src="{{ avatar_path }}" alt="User Avatar" class="avatar" id="avatar" onclick="uploadAvatar()">
+                    <input type="file" id="fileInput" style="display:none" onchange="loadAvatar(event)" maxlength="25">
+                </div>
+                <div class="table-row-ID">
+                    <div class="table-cell">ID:</div>
+                    <div class="table-cell" id="table-cell-ID">{{ customer_id }}</div>
+                </div>
+                <div class="table-row" id="row-1">
+                    <div class="table-cell">Username:</div>
+                    <div class="table-cell"><input type="text" name="username" id="username" value="{{ username }}"
+                                                   maxlength="25"></div>
+                    <span class="error-message1" id="username-error"></span>
+                </div>
+                <hr class="divider">
+                <div class="table-row" id="row-2">
+                    <div class="table-cell">Email:</div>
+                    <div class="table-cell"><input type="email" name="email" id="email" value="{{ email }}"
+                                                   maxlength="25">
+                    </div>
+                    <span class="error-message2" id="email-error"></span>
+                </div>
+                <div class="table-row" id="row-3">
+                    <div class="table-cell">Phone:</div>
+                    <div class="table-cell"><input type="tel" name="phone" id="phone" value="{{ phone }}"
+                                                   maxlength="25">
+                    </div>
+                    <span class="error-message3" id="phone-error"></span>
+                </div>
+                <div class="table-row" id="row-4">
+                    <div class="table-cell">Birthday:</div>
+                    <div class="table-cell"><input type="date" name="birthday" id="birthday" value="{{ birthday }}"
+                                                   maxlength="25"></div>
+                    <span class="error-message4" id="birthday-error"></span>
+                </div>
+                <div class="table-row" id="row-5">
+                    <div class="table-cell" id="table-cell-5">Gender:</div>
+                    <div class="table-cell" id="table-cell-gender">
+                        <input type="radio" name="gender" id="gender_male" value="Male">
+                        <label for="gender_male">Male</label>
+                        <input type="radio" name="gender" id="gender_female" value="Female">
+                        <label for="gender_female">Female</label>
+                    </div>
+                    <span class="error-message5" id="gender-error"></span>
+                </div>
+                <div class="table-row" id="row-6">
+                    <div class="table-cell">New Password:</div>
+                    <div class="table-cell"><input type="password" name="password" id="password" value="{{ password }}"
+                                                   maxlength="25"></div>
+                    <span class="error-message6" id="password-error"></span>
+                </div>
+                <div class="button-container">
+                    <button id="submit" type="button" onclick="submitForm()">Submit</button>
+                </div>
+                <div class="button-container">
+                    <button id="cancel" type="button" onclick="location.href='{{ url_for('nav_user.update_info') }}'">
+                        Cancel
+                    </button>
+                </div>
+                <div class="button-container">
+                    <button id="mailing_info" type="button"
+                            onclick="location.href='{{ url_for('nav_user.mail_info') }}'">Mailing
+                    </button>
+                </div>
+                <div class="button-container">
+                    <button id="person_info" type="button"
+                            onclick="location.href='{{ url_for('nav_user.update_info') }}'">Personal
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="../static/icon/footer/phone.svg" alt="phone" width="30" height="30">Phone: +86 13808243006
+            </p>
+            <p><img src="../static/icon/footer/email.svg" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="../static/icon/footer/facebook.svg" alt="facebook" width="30" height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="../static/icon/footer/youtube.svg" alt="youtube" width="30" height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="../static/icon/footer/instagram.svg" alt="instagram" width="30" height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="../static/icon/footer/tiktok.svg" alt="tiktok" width="30" height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

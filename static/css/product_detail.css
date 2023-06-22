@@ -1,0 +1,337 @@
+.banner {
+    display: flex;
+    height: 50px;
+    width: 100%;
+    background-color: rgba(147, 142, 142, 0.5);
+    font-family: "Bookman Old Style", sans-serif;
+    font-weight: bold;
+    font-size: 20px;
+    position: sticky;
+    top: 0;
+    justify-content: space-between;
+    padding: 0 20px;
+    z-index: 100;
+}
+
+.vendor {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin-left: 20px;
+    border-radius: 10px;
+    color: #654d2d;
+}
+
+.make-comment {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin-left: 20px;
+    position: absolute;
+    right: 185px;
+}
+
+.telephone {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin-right: 20px;
+    position: absolute;
+    right: 90px;
+}
+
+.email {
+    display: flex;
+    align-items: center;
+    height: 50px;
+    margin-right: 20px;
+}
+
+
+/*========================================*/
+.info-container {
+    position: relative;
+    cursor: pointer;
+}
+
+.info-text {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-100%);
+    padding: 5px;
+    background-color: rgba(115, 104, 104, 0.8);
+    color: #ded7d7;
+    border-radius: 10px;
+}
+
+.info-container:hover .info-text {
+    display: block;
+}
+
+/*=========product_detail========================*/
+.product-details {
+    margin: 20px;
+    padding: 20px;
+    display: flex;
+    background-color: rgba(190, 186, 169, 0.78);
+    border-radius: 20px;
+    font-size: 20px;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.product-image {
+    object-fit: cover;
+    display: flex;
+    width: 250px;
+    height: 250px;
+    margin: 20px;
+}
+
+.product-image img {
+    object-fit: cover;
+    width: 250px;
+    height: 250px;
+    border-radius: 20px;
+}
+
+.product-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 30px;
+    width: 150%;
+}
+
+.info {
+    font-size: 25px;
+    font-weight: bold;
+    color: #483929;
+    font-family: 'MyFont', Arial, sans-serif;
+    margin-right: 20px;
+}
+
+.blank{
+    margin: 30%;
+}
+
+.product-action {
+    position: relative;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 20px;
+    width: 100%;
+    padding: 20px;
+}
+
+#add-to-cart {
+    position: absolute;
+    width: 50%;
+    height: 35px;
+    border-radius: 10px;
+    background-color: #483929;
+    color: #fff;
+    font-size: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: 'MyFont', Arial, sans-serif;
+    bottom: 60px;
+    right: 0;
+}
+
+#price {
+    position: absolute;
+    bottom: 120px;
+}
+
+#number {
+    width: 30%;
+    height: 30px;
+    border-radius: 5px;
+    background-color: #c9bdac;
+    color: #fffbfb;
+    font-size: 20px;
+    cursor: pointer;
+    position: absolute;
+    bottom: 60px;
+}
+
+.discount {
+    position: absolute;
+    bottom: 150px;
+    left: 100px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #483929;
+    font-family: 'MyFont', Arial, sans-serif;
+}
+
+#like-button,
+#dislike-button {
+    position: absolute;
+    padding: 10px 10px;
+    font-size: 13px;
+    text-align: center;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+#like-button {
+    bottom: 15px;
+    left: 50px;
+}
+
+#dislike-button {
+    bottom: -35px;
+    left: 50px;
+}
+
+#like-button:hover,
+#dislike-button:hover {
+    opacity: 0.8;
+}
+
+
+.highlight {
+    background-color: rgba(241, 20, 20, 0.88);
+    color: white;
+}
+
+
+.make-like {
+    height: 50px;
+    position: absolute;
+    bottom: 0;
+    right: 165px;
+}
+
+.like_number{
+    position: absolute;
+    font-size: 20px;
+    font-weight: bold;
+    color: #483929;
+    bottom: 20px;
+    left: 160px;
+    font-family: 'MyFont', Arial, sans-serif;
+}
+
+.make-dislike {
+    height: 50px;
+    position: absolute;
+    bottom: -50px;
+    right: 165px;
+}
+.dislike_number{
+    position: absolute;
+    bottom: -30px;
+    left: 160px;
+    font-size: 20px;
+    font-weight: bold;
+    color: #483929;
+    font-family: 'MyFont', Arial, sans-serif;
+}
+
+.make-discount{
+    position: absolute;
+    bottom: 140px;
+    left: 50px;
+}
+
+#discounted-price{
+    position: absolute;
+    bottom: 110px;
+}
+
+#duration{
+    position: absolute;
+    top: -30px;
+    left: -400px;
+    font-family: "Bookman Old Style", sans-serif;
+    font-size: 20px;
+    color: #bd3c24;
+}
+
+/*============comments=========*/
+.comments {
+    margin: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    background-color: rgba(176, 172, 172, 0.50);
+    border-radius: 20px;
+}
+
+.comment {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
+    padding: 20px;
+    background-color: rgba(176, 172, 172, 0.50);
+    border-radius: 10px;
+    position: relative;
+    background-color: #a69c7c;
+
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(10px);
+    }
+}
+
+.fade-in {
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+.comment-avatar img {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    width: 50px;
+    height: 50px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+.comment-customer {
+    position: absolute;
+    top: 30px;
+    margin-left: 60px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.comment-date {
+    position: absolute;
+    right: 10px;
+    top: 30px;
+    font-weight: bold;
+    font-family: "Bookman Old Style", sans-serif;
+    font-size: 20px;
+}
+
+.comment-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    margin: 10px;
+    width: 100%;
+    height: 60px;
+    padding: 10px;
+    background-color: rgba(255, 251, 251, 0.82);
+    border-radius: 10px;
+    font-family: "Bookman Old Style", sans-serif;
+    font-size: 20px;
+}

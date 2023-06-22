@@ -1,0 +1,163 @@
+{% extends 'login_base.html' %}
+{% block title %}
+Login Page
+{% endblock %}
+{% block link %}
+<link rel="stylesheet" href="../static/css/login.css">
+<script>
+    $(document).ready(function () {
+        $('#login-form').on('submit', function (event) {
+            event.preventDefault();
+            const usernameInput = $('#username');
+            const passwordInput = $('#password');
+            const captchaInput = $('#captcha');
+            const userTypes = $("input[name='user_type']:checked");
+            const username = usernameInput.val();
+            const password = passwordInput.val();
+            const captcha = captchaInput.val();
+            const userType = userTypes.val();
+
+            $.ajax({
+                url: '/login/check_login',
+                method: 'POST',
+                data: {
+                    username: username,
+                    password: password,
+                    captcha: captcha,
+                    user_type: userType,
+                },
+                success: function (response) {
+                    // Clear previous error messages
+                    $('#username-error').text('');
+                    $('#password-error').text('');
+                    $('#captcha-error').text('');
+                    $('#user-type-error').text('');
+
+                    // Removes the incorrect style of the input box
+                    usernameInput.removeClass('error');
+                    passwordInput.removeClass('error');
+                    captchaInput.removeClass('error');
+
+                    if (response.success) {
+                        $('#process_bar').show();
+                        setTimeout(function () {
+                            $('#process_bar').hide();
+                            window.alert('Login successfully!')
+                            if (userType === 'customer')
+                                window.location.href = '/login/after_login';
+                            else if (userType === 'vendor')
+                                window.location.href = '/vendor_upload/upload_page';
+                        }, 2500);
+                    } else {
+                        $('input').click(function () {
+                            const inputId = $(this).attr('id');
+                            const errorId = inputId + '-error';
+                            $(this).removeClass('error error-message1 error-message2 error-message3 error-message4');
+                            $('#' + errorId).removeClass('show').text('').removeClass('error-message');
+                        });
+
+                        if (response.show_alert && response.errors.login) {
+                            window.alert(response.errors.login);
+                            window.location.href = '/login/login_page';
+                        }
+
+                        function showError(errorElement, errorMessage, inputElement) {
+                            errorElement.text(errorMessage).addClass('error-message show');
+                            inputElement.addClass('error');
+                            setTimeout(function () {
+                                errorElement.removeClass('show');
+                                setTimeout(function () {
+                                    errorElement.text('').removeClass('error-message');
+                                }, 500); // Matches the transition time in CSS
+                            }, 2500);
+                        }
+
+                        if (response.errors.username) {
+                            showError($('#username-error'), response.errors.username, usernameInput);
+                        }
+                        if (response.errors.password) {
+                            showError($('#password-error'), response.errors.password, passwordInput);
+                        }
+                        if (response.errors.captcha) {
+                            showError($('#captcha-error'), response.errors.captcha, captchaInput);
+                        }
+                        if (response.errors.user_type) {
+                            showError($('#user-type-error'), response.errors.user_type, userTypes);
+                        }
+
+                        setTimeout(function () {
+                            usernameInput.removeClass('error');
+                            passwordInput.removeClass('error');
+                            captchaInput.removeClass('error');
+                        }, 2000);
+                    }
+                },
+            });
+        });
+    });
+</script>
+{% endblock %}
+{% block content %}
+<div class="parallax">
+    <img src="../static/png/hill2.png" id="hill2">
+    <img src="../static/png/hill3.png" id="hill3">
+    <img src="../static/png/hill4.png" id="hill4">
+    <img src="../static/png/hill5.png" id="hill5">
+    <img src="../static/png/tree.png" id="tree">
+    <img src="../static/png/leaf.png" id="leaf">
+    <img src="../static/png/plant.png" id="plant">
+    {% block input_lable %}
+    <div class="container">
+        <form class="login-form" id="login-form">
+            <h2>Login</h2>
+            <label for="username">
+                <input type="text" name="username" placeholder="username" id="username" autocomplete="off" maxlength="25"/>
+                <img src="../static/icon/information/user.svg" alt="Your Image Description" class="input-icon"
+                     id="icon_user"/>
+            </label>
+            <span class="error-message1" id="username-error"></span>
+            <br/>
+
+            <label for="password">
+                <input type="password" name="password" placeholder="password" id="password" maxlength="25">
+                <img src="../static/icon/information/password.svg" alt="Your Image Description"
+                     class="input-icon"
+                     id="icon_password"/>
+            </label>
+            <span class="error-message2" id="password-error"></span>
+            <br/>
+
+            <label for="captcha">
+                <input type="text" name="captcha" placeholder="captcha" id="captcha" maxlength="25"/>
+                <img src="../static/icon/information/captcha.svg" alt="Your Image Description"
+                     class="input-icon"
+                     id="icon_captcha"/>
+            </label>
+            <span class="error-message3" id="captcha-error"></span>
+            <br/>
+
+            <img id="captcha-image" src="{{ url_for('captcha_image') }}" alt="Captcha">
+            <button type="button" id="refresh-captcha">Refresh</button>
+
+            <div class="user-type">
+                <label id="type_user">
+                    <input type="radio" name="user_type" value="customer" maxlength="25"/>
+                    <span class="user-type-option">Customer</span>
+                </label>
+                <label id="type_vendor">
+                    <input type="radio" name="user_type" value="vendor" maxlength="25"/>
+                    <span class="user-type-option">Vendor</span>
+                </label>
+            </div>
+            <span class="error-message4" id="user-type-error"></span>
+            <img src="../static/gif/process_bar.gif" id="process_bar" style="display: none">
+            <button type="submit" id="GO_button">GO</button>
+            <a href="{{ url_for('register.register_page')}}" id="link_in_login">Don't have account? click
+                here</a>
+        </form>
+    </div>
+    {% endblock %}
+</div>
+<script src="../static/js/captcha.js"></script>
+{% endblock %}
+

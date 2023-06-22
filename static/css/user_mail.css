@@ -1,0 +1,152 @@
+#row-1 {
+    position: absolute;
+    top: 12%;
+    left: 60%;
+    font-size: 30px;
+}
+
+#row-2 {
+    position: absolute;
+    top: 32%;
+    left: 60%;
+    font-size: 30px;
+    margin: 0;
+}
+
+
+#row-3 {
+    position: absolute;
+    top: 12%;
+    left: 17%;
+    font-size: 30px;
+}
+
+#row-4 {
+    position: absolute;
+    top: 32%;
+    left: 17%;
+    font-size: 30px;
+    width: 300px;
+
+}
+
+#row-5 {
+    position: absolute;
+    top: 52%;
+    left: 17%;
+    font-size: 30px;
+}
+
+
+#row-6 {
+    position: absolute;
+    top: 72%;
+    left: 17%;
+    font-size: 30px;
+}
+
+/*===================================================*/
+.error-message1 {
+    font-size: 15px;
+    margin-top: 5px;
+    position: absolute;
+    width: 500px;
+    margin-left: -60px;
+}
+
+
+.error-message2 {
+    font-size: 15px;
+    margin-top: 5px;
+    position: absolute;
+    width: 500px;
+    margin-left: -60px;
+}
+
+.error-message3 {
+    font-size: 15px;
+    margin-top: 5px;
+    position: absolute;
+    width: 500px;
+    margin-left: -60px;
+}
+
+.error-message4 {
+    font-size: 15px;
+    margin-top: 5px;
+    position: absolute;
+    width: 500px;
+    margin-left: -80px;
+}
+
+.error-message5 {
+    font-size: 15px;
+    margin-top: 5px;
+    position: absolute;
+    width: 500px;
+    margin-left: -60px;
+
+}
+
+.error-message6 {
+    font-size: 15px;
+    margin-top: 5px;
+    position: absolute;
+    width: 500px;
+    margin-left: -60px;
+}
+
+/*===============================================*/
+#cancel {
+    position: absolute;
+    top: 90%;
+    left: 80%;
+}
+
+#submit {
+    position: absolute;
+    top: 90%;
+    left: 65%;
+}
+
+#add_new {
+    position: absolute;
+    top: 90%;
+    left: 6%;
+}
+
+#delete {
+    position: absolute;
+    top: 90%;
+    left: 21%;
+}
+
+#prev-address {
+    position: absolute;
+    top: 90%;
+    left: 47%;
+}
+
+#next-address {
+    position: absolute;
+    top: 90%;
+    left: 52%;
+}
+
+#current-index {
+    position: absolute;
+    top: 89.5%;
+    left: 50.3%;
+    font-size: 30px;
+    transition: transform 0.5s;
+
+}
+
+.hover-effect {
+    transition: transform 0.3s, opacity 0.3s;
+}
+
+.hover-effect:hover {
+    transform: scale(1.4);
+    opacity: 0.8;
+}

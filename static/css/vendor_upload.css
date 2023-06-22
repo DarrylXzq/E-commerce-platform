@@ -1,0 +1,121 @@
+.container {
+    position: relative;
+}
+.sidebar {
+    width: 200px;
+    background-color: #8c8457;
+    font-family: 'MyFont', Arial, sans-serif;
+    color: #d5d1c9;
+    position: absolute;
+    top: 70px;
+    height: fit-content;
+}
+
+.parent {
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid #a99e7c;
+    margin-bottom: 2px;
+
+}
+
+.child {
+    cursor: pointer;
+    padding: 10px;
+    border: 2px solid #a99e7c;
+    margin-bottom: 2px;
+    background-color: #E8D6A7;
+    color: #333333;
+
+}
+
+.parent:hover,
+.child:hover {
+    background-color: #a99e7c;
+    transition-duration: 0.5s;
+}
+
+.parent-selected {
+    background-color: #705b4d;
+}
+
+.children {
+    display: none;
+}
+
+.child a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.child a:hover {
+    color: inherit;
+    text-decoration: none;
+}
+
+/*==============================================*/
+
+form {
+    max-width: 1000px;
+    margin: 0 auto;
+    background-color: #e7e7e7;
+    padding: 0;
+    border-radius: 4px;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+}
+
+.form-group {
+    flex: 0 0 calc(50% - 20px);
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+input[type="date"],
+input[type="email"],
+input[type="password"],
+input[type="tel"],
+select {
+    display: block;
+    width: 100%;
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    margin-top: 5px;
+    margin-bottom: 10px;
+}
+
+input[type='file'] {
+    margin-bottom: 15px;
+    margin-top: 5px;
+}
+
+input[type="submit"] {
+    display: block;
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    margin-top: 20px;
+    cursor: pointer;
+}
+
+input[type="submit"]:hover {
+    background-color: #0056b3;
+}

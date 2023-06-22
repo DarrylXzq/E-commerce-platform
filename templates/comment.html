@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, user-scalable=yes">
+    <title>comment</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/comment.css') }}">
+    <script>
+        $(document).ready(function () {
+            $('.comment-cancel input').on('click', function () {
+                window.location.href = '{{ url_for('detail.detail_page', product_id=product.product_id) }}';
+            });
+        });
+
+        $(document).ready(function () {
+            $('#comment-form').on('submit', function (event) {
+                event.preventDefault();
+
+                const comment = $('#comment').val();
+                const product_id = '{{ product.product_id }}';
+
+                $.ajax({
+                    url: "{{ url_for('comment.comment_submit') }}",
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({product_id: product_id, comment: comment}),
+                    success: function (response) {
+                        if (response.success) {
+                            alert(response.message);
+                            window.location.href = '{{ url_for('comment.comment_page', product_id=product.product_id) }}';
+                        } else {
+                            alert(response.message);
+                        }
+                    },
+                    error: function () {
+                        console.log('Error submitting comment');
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+<header>
+    <a href="{{ url_for('home.home_page') }}" class="logo">Logo</a>
+    <div class="nav-wrapper">
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/home.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">Home</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/collection.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">Collection</div>
+            </div>
+        </a>
+        <a href="{{ url_for('cart.cart_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/cart.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">Cart</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/history.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">History</div>
+            </div>
+        </a>
+        <a href="{{ url_for('order.order_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/order.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">Order</div>
+            </div>
+        </a>
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('nav_user.info') }}">
+                    <img src="{{ url_for('static', filename='icon/navbar/user.svg') }}" alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="container">
+    <button class="review-all">
+        <a href="{{ url_for('comment.review', last_product=product.product_id) }}">Review all</a>
+    </button>
+    <div class="product">
+        <div class="vendor_name">
+            Vendor: {{ product.vendor_name }}
+        </div>
+        <div class="product-image">
+            <img src="{{ url_for('static', filename=product.picture) }}" alt="{{ product.name }}">
+        </div>
+        <div class="product-info">
+            <h2><span class="info">Product name:</span>{{ product.name }}</h2>
+            <br/>
+            <h3><span class="info">Description:</span>{{ product.description }}</h3>
+        </div>
+    </div>
+    <div class="comments">
+        {% for comment in comments %}
+            <div class="comment fade-in">
+                <div class='comment-avatar'>
+                    <img src="{{ url_for('static', filename=comment.avatar) }}" alt="avatar">
+                </div>
+                <div class="comment-customer">{{ comment.customer }}</div>
+                <div class="comment-date">{{ comment.date }}</div>
+                <div class="comment-text">{{ comment.text }}</div>
+            </div>
+            <br/>
+            <br/>
+        {% endfor %}
+    </div>
+</div>
+<div class="submit">
+    <form id="comment-form" method="post">
+        <div class="comment-text">
+                <textarea name="comment" maxlength="80" id="comment" cols="20" rows="1" placeholder="Write your comment here..."
+                          required></textarea>
+        </div>
+        <div class="comment-submit">
+            <input type="submit" value="Submit">
+        </div>
+        <div class="comment-cancel">
+            <input type="button" value="Cancel">
+        </div>
+    </form>
+</div>
+
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="{{ url_for('static', filename='icon/footer/phone.svg') }}" alt="phone" width="30" height="30">Phone:
+                +86 13808243006
+            </p>
+            <p><img src="{{ url_for('static', filename='icon/footer/email.svg') }}" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="{{ url_for('static', filename='icon/footer/facebook.svg') }}" alt="facebook" width="30"
+                         height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/facebook.svg') }}" alt="youtube" width="30"
+                         height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/instagram.svg') }}" alt="instagram" width="30"
+                         height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/tiktok.svg') }}" alt="tiktok" width="30"
+                         height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

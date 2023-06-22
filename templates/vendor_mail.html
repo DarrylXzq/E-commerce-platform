@@ -1,0 +1,33 @@
+{% extends 'vendor_upload.html' %}
+
+{% block script %}
+    {% if message %}
+        <script>
+            window.onload = function () {
+                alert("{{ message }}");
+            };
+        </script>
+    {% endif %}
+{% endblock %}
+
+{% block content %}
+    <form id="vendor-info-form" method="post" action="{{ url_for('vendor_info.update_vendor_address') }}">
+        <input type="hidden" id="address_id" name="address_id" value="{{ address.address_id }}">
+
+        <label for="country_name">Country:</label>
+        <input type="text" id="country_name" name="country_name" max="20" value="{{ address.country_name }}"
+               required><br>
+
+        <label for="province_name">Province:</label>
+        <input type="text" id="province_name" name="province_name" max="20" value="{{ address.province_name }}"
+               required><br>
+
+        <label for="city_name">City:</label>
+        <input type="text" id="city_name" name="city_name" max="50" value="{{ address.city_name }}" required><br>
+
+        <label for="address">Address:</label>
+        <input type="text" id="address" name="address" max="50" value="{{ address.address }}" required><br>
+
+        <input type="submit" value="Update">
+    </form>
+{% endblock %}

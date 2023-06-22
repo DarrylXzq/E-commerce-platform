@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, user-scalable=yes">
+    <title>product_detail</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/product_detail.css') }}">
+    <script>
+        $(document).ready(function () {
+            $('#like-button').on('click', function () {
+                var requestData = {
+                    "product_id": "{{ product.product_id }}",
+                    "action": "like"
+                };
+
+                $.ajax({
+                    url: "{{ url_for('detail.update_likes_dislikes') }}",
+                    method: 'POST',
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        // Update the number of like displayed
+                        $('.like_number').text(response.likes);
+                        $('.dislike_number').text(response.dislikes);
+
+                        if (response.user_like_status) {
+                            $('#like-button').addClass('highlight');
+                            $('#dislike-button').removeClass('highlight');
+                        } else if (response.user_dislike_status) {
+                            $('#dislike-button').addClass('highlight');
+                            $('#like-button').removeClass('highlight');
+                        } else {
+                            $('#like-button').removeClass('highlight');
+                            $('#dislike-button').removeClass('highlight');
+                        }
+                    },
+                    error: function () {
+                        console.log('Error updating likes');
+                    }
+                });
+            });
+
+            $('#dislike-button').on('click', function () {
+                var requestData = {
+                    "product_id": "{{ product.product_id }}",
+                    "action": "dislike"
+                };
+
+                $.ajax({
+                    url: "{{ url_for('detail.update_likes_dislikes') }}",
+                    method: 'POST',
+                    contentType: "application/json",
+                    data: JSON.stringify(requestData),
+                    success: function (response) {
+                        // Updated number of dislike displays
+                        $('.dislike_number').text(response.dislikes);
+                        $('.like_number').text(response.likes);
+
+                        if (response.user_like_status) {
+                            $('#like-button').addClass('highlight');
+                            $('#dislike-button').removeClass('highlight');
+                        } else if (response.user_dislike_status) {
+                            $('#dislike-button').addClass('highlight');
+                            $('#like-button').removeClass('highlight');
+                        } else {
+                            $('#like-button').removeClass('highlight');
+                            $('#dislike-button').removeClass('highlight');
+                        }
+                    },
+                    error: function () {
+                        console.log('Error updating dislikes');
+                    }
+                });
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $.getJSON('{{ url_for("detail.display_like", product_id=product.product_id) }}', function (data) {
+                if (data.user_like_status) {
+                    $('#like-button').addClass('highlight');
+                    $('#dislike-button').removeClass('highlight');
+                } else if (data.user_dislike_status) {
+                    $('#dislike-button').addClass('highlight');
+                    $('#like-button').removeClass('highlight');
+                } else {
+                    $('#like-button').removeClass('highlight');
+                    $('#dislike-button').removeClass('highlight');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#add-to-cart-form').on('submit', function (event) {
+                event.preventDefault(); // Prevents the default submission behavior of forms
+                const form = $(this);
+                $.ajax({
+                    url: '{{ url_for('cart.add_to_cart', product_id=product.product_id) }}',
+                    type: 'POST',
+                    data: form.serialize(),
+                    success: function (data) {
+                        if (data.success) {
+                            alert(data.message);
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Error: can not add to cart');
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#number").on('input', function (e) {
+                var max = parseInt($(this).attr('max'));
+                var min = parseInt($(this).attr('min'));
+                if ($(this).val() > max) {
+                    $(this).val(max);
+                } else if ($(this).val() < min) {
+                    $(this).val(min);
+                }
+            });
+        });
+    </script>
+</head>
+
+<body>
+<header>
+    <a href="{{ url_for('home.home_page') }}" class="logo">Logo</a>
+    <div class="nav-wrapper">
+        {% if session.get('user_type') %}
+            <a href="{{ url_for('home.home_page') }}">
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='icon/navbar/home.svg') }}" alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">Home</div>
+                </div>
+            </a>
+            <a href="{{ url_for('home.home_page') }}">
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='icon/navbar/collection.svg') }}"
+                         alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">Collection</div>
+                </div>
+            </a>
+            <a href="{{ url_for('cart.cart_page') }}">
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='icon/navbar/cart.svg') }}" alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">Cart</div>
+                </div>
+            </a>
+            <a href="{{ url_for('home.home_page') }}">
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='icon/navbar/history.svg') }}" alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">History</div>
+                </div>
+            </a>
+            <a href="{{ url_for('order.order_page') }}">
+                <div class="image-container">
+                    <img src="{{ url_for('static', filename='icon/navbar/order.svg') }}" alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">Order</div>
+                </div>
+            </a>
+        {% endif %}
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('nav_user.info') }}">
+                    <img src="{{ url_for('static', filename='icon/navbar/user.svg') }}" alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="banner">
+    <div class="vendor">
+        <a href="{{ url_for('detail.vendor_page', vendor_id=product.vendor_id) }}" style="color: #8f6834;
+    text-decoration: none;">Vendor: {{ product.vendor_name }}</a>
+    </div>
+    <a href="{{ url_for('comment.comment_page', product_id=product.product_id) }}">
+        <div class="make-comment">
+            <img src="{{ url_for('static', filename='icon/information/comment.svg') }}" alt="Your Image Description"
+                 width="30" height="40"/>
+        </div>
+    </a>
+    <div class="telephone">
+        <div class="info-container">
+            <img src="{{ url_for('static', filename='icon/information/phone.svg') }}" alt="Your Image Description"
+                 width="30" height="40"/>
+            <div class="telephone-number info-text">{{ product.vendor_phone }}</div>
+        </div>
+    </div>
+    <div class="email">
+        <div class="info-container">
+            <img src="{{ url_for('static', filename='icon/information/email.svg') }}" alt="Your Image Description"
+                 width="30" height="40"/>
+            <div class="email-address info-text">{{ product.vendor_email }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="product-details">
+    <div class="product-image">
+        <img src="{{ url_for('static', filename=product.picture) }}" alt="{{ product.name }}">
+    </div>
+    <div class="product-info">
+        <h2><span class="info">Product name:</span>{{ product.name }}</h2>
+        <h3><span class="info">Description:</span>{{ product.description }}</h3>
+        <h3><span class="info">stock: </span>{{ product.stock }}</h3>
+    </div>
+    <div class="product-action">
+        <form id="add-to-cart-form">
+            {% if product.discount > 0 and product.duration_start <= now  and product.duration_end >= now %}
+                <h2 id="original-price" style="text-decoration: line-through; color: #c43838;"><span class="info">Original Price: </span>
+                    ${{ product.price }}</h2>
+                <h2 id="discounted-price"><span class="info">Discounted Price: </span>
+                    ${{ '%.2f' | format(product.price * (1 - product.discount / 100)) }}</h2>
+            {% else %}
+                <h2 id="price"><span class="info">Price: </span> ${{ product.price }}</h2>
+            {% endif %}
+            <input type="number" name="quantity" value="1" min="1" max="{{ product.stock }}" id="number">
+            <input type="submit" value="Add to cart" id="add-to-cart">
+        </form>
+        {% if product.discount > 0 and product.duration_start <= now  and product.duration_end >= now %}
+            <div class="discount">
+                <h2><span class="info">Off: </span>{{ product.discount }}%</h2>
+            </div>
+            <div class="make-discount">
+                <img src="{{ url_for('static', filename='icon/information/discount.svg') }}"
+                     alt="Your Image Description"
+                     width="30" height="40"/>
+            </div>
+            <div class="promotion-duration">
+                <h2 id="duration"><span
+                        class="info">Promotion Duration: </span><br/>{{ product.duration_start.strftime('%Y-%m-%d') }}
+                    to {{ product.duration_end.strftime('%Y-%m-%d') }}</h2>
+            </div>
+        {% endif %}
+        <button id="like-button">Like</button>
+        <button id="dislike-button">Dislike</button>
+        <div class="make-like">
+            <img src="{{ url_for('static', filename='icon/information/like.svg') }}" alt="Your Image Description"
+                 width="30" height="40"/>
+        </div>
+        <div class="like_number">
+            {{ product.likes }}
+        </div>
+        <div class="make-dislike">
+            <img src="{{ url_for('static', filename='icon/information/dislike.svg') }}" alt="Your Image Description"
+                 width="30" height="40"/>
+        </div>
+        <div class="dislike_number">
+            {{ product.dislikes }}
+        </div>
+    </div>
+</div>
+
+<div class="comments">
+    {% for comment in comments %}
+        <div class="comment fade-in">
+            <div class='comment-avatar'>
+                <img src="{{ url_for('static', filename=comment.avatar) }}" alt="avatar">
+            </div>
+            <div class="comment-customer">{{ comment.customer }}</div>
+            <div class="comment-date">{{ comment.date }}</div>
+            <div class="comment-text">{{ comment.text }}</div>
+        </div>
+        <br/>
+    {% endfor %}
+</div>
+
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="{{ url_for('static', filename='icon/footer/phone.svg') }}" alt="phone" width="30" height="30">Phone:
+                +86 13808243006
+            </p>
+            <p><img src="{{ url_for('static', filename='icon/footer/email.svg') }}" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="{{ url_for('static', filename='icon/footer/facebook.svg') }}" alt="facebook" width="30"
+                         height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/facebook.svg') }}" alt="youtube" width="30"
+                         height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/instagram.svg') }}" alt="instagram" width="30"
+                         height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/tiktok.svg') }}" alt="tiktok" width="30"
+                         height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

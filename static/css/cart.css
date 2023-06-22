@@ -1,0 +1,298 @@
+.container {
+    width: 98%;
+    margin: 10px auto;
+}
+
+.product {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    margin-bottom: 20px;
+    padding: 15px;
+}
+
+.product-image {
+    text-align: center;
+    width: 120px;
+}
+
+.product-image img {
+    width: 120px;
+    height: auto;
+    transform: translateX(20px);
+}
+
+.product-info {
+    width: 50%;
+    transform: translateX(100px);
+}
+
+.info {
+    color: #777;
+}
+
+.product-price {
+    text-align: center;
+    transform: translateX(-110px);
+    font-family: "Bookman Old Style", sans-serif;
+    font-size: 16px;
+}
+
+.product-quantity {
+    text-align: center;
+    position: absolute;
+    right: 420px;
+    width: 80px;
+    height: 30px;
+    border: 1px solid #e3cece;
+    background-color: #c4b7af;
+    border-radius: 10px;
+    font-size: 17px;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.product-subtotal {
+    position: absolute;
+    left: 1120px;
+    text-align: center;
+    font-family: "Bookman Old Style", sans-serif;
+    font-size: 16px;
+}
+
+.product-discounted-price{
+    position: absolute;
+    left: 1120px;
+    bottom: 20px;
+    text-align: center;
+    font-family: "Bookman Old Style", sans-serif;
+    font-size: 16px;
+}
+
+.product-discount{
+    position: absolute;
+    left: 1125px;
+    bottom: 40px;
+    text-align: center;
+    font-family: "Bookman Old Style", sans-serif;
+    font-size: 16px;
+    font-weight: bold;
+    color: #e8292d;
+}
+
+.title-of-label {
+    justify-content: space-between;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    display: flex;
+    font-family: 'MyFont', Arial, sans-serif;
+    background-color: rgba(159, 158, 148, 0.87);
+    border-radius: 2px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.title-of-label > div {
+    margin-right: 240px;
+    left: 100px;
+    position: relative;
+}
+
+.move0 {
+    transform: translateX(150px);
+}
+
+.move1 {
+    transform: translateX(350px);
+}
+
+.move2 {
+    transform: translateX(250px);
+}
+
+.move3 {
+    transform: translateX(130px);
+}
+
+.delete-btn {
+    background-color: #f44336; /* Red */
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 8px 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: "Bookman Old Style", sans-serif;
+    transition: background-color 0.3s, color 0.3s;
+    position: absolute;
+    right: 50px;
+
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f;
+    color: white;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(10px);
+    }
+}
+
+.fade-in {
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+/*====================================================*/
+.summary-sticky {
+    position: sticky;
+    bottom: 0;
+    background-color: #efede6;
+    padding: 16px 0;
+    box-shadow: 0 -4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 100;
+    opacity: 0.9;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.summary-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    flex-direction: column;
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.total-price,
+.discounted-price {
+    position: relative;
+    font-size: 18px;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    left: 250px;
+}
+
+.check-out{
+    position: absolute;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 20px;
+    right: 50px;
+    color: white;
+    background-color: #b47a4f;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.check-out:hover {
+    background-color: #8f6834;
+    color: white;
+    transition-duration: 0.5s;
+}
+
+.select-all{
+    position: absolute;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 20px;
+    left: 50px;
+    color: white;
+    background-color: #4CAF50;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.select-all:hover {
+    background-color: #3e8e41;
+    color: white;
+    transition-duration: 0.5s;
+}
+
+.delete-all{
+    position: absolute;
+    margin-top: 10px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    padding: 10px;
+    font-size: 20px;
+    left: 200px;
+    color: white;
+    background-color: #de3a3a;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.delete-all:hover {
+    background-color: #a93737;
+    color: white;
+    transition-duration: 0.5s;
+}
+
+
+/*===============check box===============*/
+.custom-checkbox {
+    appearance: none;
+    outline: none;
+    position: relative;
+    width: 24px;
+    height: 24px;
+    background-color: transparent;
+    border: 1px solid #ccc;
+}
+
+.custom-checkbox:checked {
+    background-color: #3851ff;
+}
+
+.custom-checkbox::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 14px;
+    height: 7px;
+    border: 3px solid #ffffff;
+    border-top: none;
+    border-right: none;
+    transform: translateY(-50%) translateX(-50%) rotate(-45deg);
+    opacity: 0;
+}
+
+.custom-checkbox:checked::before {
+    opacity: 1;
+}
+
+
+.vendor_name{
+    position: absolute;
+    left: 50px;
+    top: -12px;
+    font-size: 20px;
+    font-weight: bold;
+    font-family: 'MyFont', Arial, sans-serif;
+    z-index: 100;
+    background-color: #e3bd8d;
+    border-radius: 2px;
+}

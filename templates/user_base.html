@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, user-scalable=yes">
+    <title>{% block title %}{% endblock %}</title>
+    <link rel="stylesheet" href="../static/css/user_base.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
+</head>
+
+<body>
+<header>
+    <a href="{{ url_for('home.home_page') }}" class="logo">Logo</a>
+    <div class="nav-wrapper">
+        <div class="search">
+            <label>
+                <input type="text" placeholder="Search" maxlength="25">
+                <img src="../static/icon/navbar/search.svg" alt="search" width="30" height="40">
+            </label>
+            <i class="fa fa-search" aria-hidden="true"></i>
+        </div>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/home.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Home</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/collection.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Collection</div>
+            </div>
+        </a>
+        <a href="{{ url_for('cart.cart_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/cart.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Cart</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/history.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">History</div>
+            </div>
+        </a>
+        <a href="{{ url_for('order.order_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/order.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Order</div>
+            </div>
+        </a>
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('nav_user.info') }}">
+                    <img src="../static/icon/navbar/user.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="../static/icon/footer/phone.svg" alt="phone" width="30" height="30">Phone: +86 13808243006
+            </p>
+            <p><img src="../static/icon/footer/email.svg" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="../static/icon/footer/facebook.svg" alt="facebook" width="30" height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="../static/icon/footer/youtube.svg" alt="youtube" width="30" height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="../static/icon/footer/instagram.svg" alt="instagram" width="30" height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="../static/icon/footer/tiktok.svg" alt="tiktok" width="30" height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

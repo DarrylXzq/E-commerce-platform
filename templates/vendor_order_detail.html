@@ -1,0 +1,68 @@
+{% extends 'vendor_upload.html' %}
+
+{% block script %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vendor_order_detail.css') }}">
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+        <div class="info-box">
+            <h2>Customer Information</h2>
+            <p id="c-name"><span class="title">Name: </span>{{ order.customer_name }}</p>
+            <p id="c-email"><span class="title">Email: </span>{{ order.customer_email }}</p>
+            <p id="c-phone"><span class="title">Phone: </span> {{ order.customer_phone }}</p>
+            <p id="c-country"><span class="title">Country: </span> {{ order.customer_country }}</p>
+            <p id="c-province"><span class="title">province:</span> {{ order.customer_province }}</p>
+            <p id="c-city"><span class="title">City:</span> {{ order.customer_city }}</p>
+            <p id="c-address"><span class="title">Address:</span> {{ order.customer_address }}</p>
+        </div>
+        <div class="info-box">
+            <h2>Vendor Information</h2>
+            <p id="v-name"><span class="title">Name: </span>{{ order.vendor_name }}</p>
+            <p id="v-email"><span class="title">Email: </span>{{ order.vendor_email }}</p>
+            <p id="v-phone"><span class="title">Phone: </span>{{ order.vendor_phone }}</p>
+            <p id="v-country"><span class="title">Country: </span> {{ order.vendor_country }}</p>
+            <p id="v-province"><span class="title">province:</span> {{ order.vendor_province }}</p>
+            <p id="v-city"><span class="title">City:</span>{{ order.vendor_city }}</p>
+            <p id="v-address"><span class="title">Address:</span> {{ order.vendor_address }}</p>
+        </div>
+        <div class="info-box_order">
+            <form action="{{ url_for('vendor_order_detail.update_order') }}" method="post">
+                <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                    <div>
+                        <label for="order_status">Order Status:</label>
+                        <select id="order_status" name="order_status" required>
+                            {% if order.status == 'paid' %}
+                                <option value="paid" selected>paid</option>
+                                <option value="shipped">shipped</option>
+                            {% elif order.status == 'shipped' %}
+                                <option value="shipped" selected>shipped</option>
+                                <option value="completed">completed</option>
+                            {% elif order.status == 'completed' %}
+                                <option value="completed" selected>completed</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                <div>
+                    <label for="message">Notice:</label>
+                    <textarea id="message" maxlength="60" name="message" rows="4" cols="50" required>{{ order.content }}</textarea>
+                </div>
+                <div>
+                    <label for="delivery_date">Estimated Delivery Date:</label>
+                    <input type="date" id="delivery_date" name="delivery_date"
+                           value="{{ order.delivery_time }}" required>
+                </div>
+                <input type="submit" value="Update Order Status">
+            </form>
+        </div>
+        <div class="info-box-notice">
+            <h2>Notice history:</h2>
+            {% for announcement in announcements %}
+                <div class="announcement">
+                    <p class="date-time"><strong>Date:</strong> {{ announcement.announcement_date }}</p>
+                    <p class="content"><strong>Content:</strong> {{ announcement.content }}</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}

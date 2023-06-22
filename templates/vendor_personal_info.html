@@ -1,0 +1,55 @@
+{% extends 'vendor_upload.html' %}
+
+{% block script %}
+    <script>
+        window.onload = function () {
+            {% if message_email %}
+                alert("{{ message_email }}");
+            {% endif %}
+            {% if message_phone %}
+                alert("{{ message_phone }}");
+            {% endif %}
+            {% if message_name %}
+                alert("{{ message_name }}");
+            {% endif %}
+            {% if message %}
+                alert("{{ message }}");
+            {% endif %}
+        };
+    </script>
+    <style>
+        .vendor_id {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            margin-left: 40%;
+            font-family: "Bookman Old Style", sans-serif;
+        }
+    </style>
+
+{% endblock %}
+
+{% block content %}
+    <form id="vendor-info-form" method="post" action="/vendor_info/update_personal_info">
+        <input type="hidden" id="vendor_id" name="vendor_id" value="{{ vendor.vendor_id }}">
+        <div class="vendor_id">Vendor_ID: {{ vendor.vendor_id }}</div>
+
+        <label for="vendor_name">Vendor name:</label>
+        <input type="text" id="vendor_name" name="vendor_name" value="{{ vendor.vendor_name }}" maxlength="50" required><br>
+
+        <label for="vendor_password">New password:</label>
+        <input type="password" id="vendor_password" name="vendor_password" maxlength="50"
+               pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W]).{8,}">
+        <br>
+
+        <label for="vendor_email">Email:</label>
+        <input type="email" id="vendor_email" name="vendor_email" value="{{ vendor.vendor_email }}" maxlength="50"
+               pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,}$" required><br>
+
+        <label for="vendor_phone">Phone:</label>
+        <input type="tel" id="vendor_phone" name="vendor_phone" value="{{ vendor.vendor_phone }}" maxlength="15"
+               pattern="[\d\s()-]{7,15}" required><br>
+
+        <input type="submit" value="Update">
+    </form>
+{% endblock %}

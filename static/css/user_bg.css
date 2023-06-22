@@ -1,0 +1,70 @@
+body {
+    background-image: url("../png/info5.png");
+    background-repeat: no-repeat;
+    background-position: 0 0;
+    background-size: cover;
+    background-color: #02725FFF;
+    margin: 0;
+}
+
+.table-container {
+    background-color: rgba(255, 255, 255, 0.7);
+    border-radius: 20px;
+    padding: 20px;
+    width: 40%;
+    margin: 10%;
+    height: 580px;
+    margin-left: 30%;
+    font-family: MyFont, Arial, sans-serif;
+}
+
+
+.table-row {
+    display: flex;
+    justify-content: space-around;
+    padding: 15px;
+}
+
+
+.table-cell {
+    flex: 1;
+    display: flex;
+    justify-content: space-around;
+    font-size: 20px;
+}
+
+.avatar-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    object-fit: cover;
+}
+
+
+.button-container {
+    text-align: center;
+    margin-top: 20px;
+}
+
+button {
+    background-color: #02725F;
+    color: white;
+    border: none;
+    width: 150px;
+    padding: 5px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-family: MyFont, Arial, sans-serif;
+    font-size: 20px;
+}
+
+button:hover {
+    transition-duration: 0.5s;
+    background-color: rgb(10, 98, 44);
+    box-shadow: 0 0 5px rgb(1, 100, 31);
+}

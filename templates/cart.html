@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, user-scalable=yes">
+    <title>comment</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/user_base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/cart.css') }}">
+    <script>
+        $(document).ready(function () {
+            $('.product').each(function () {
+                updateSubtotal($(this));
+            });
+
+            $('.product-quantity').on('change', function () {
+                const product = $(this).closest('.product');
+                updateSubtotal(product);
+            });
+
+            function updateSubtotal(product) {
+                let price = parseFloat(product.attr('data-price'));
+                const promotion = parseFloat(product.attr('data-promotion'));
+                const duration_start_str = product.attr('data-duration_start');
+                const duration_end_str = product.attr('data-duration_end');
+                const now_str = product.attr('data-now');
+
+                const duration_start = duration_start_str ? new Date(duration_start_str) : null;
+                const duration_end = duration_end_str ? new Date(duration_end_str) : null;
+                const now = new Date(now_str);
+
+                const quantity = parseInt(product.find('.product-quantity').val());
+                const subtotal = price * quantity;
+
+                // Check if the product is in the promotion period
+                if (duration_start && duration_end && now >= duration_start && now <= duration_end) {
+                    const discountedPrice = price * (1 - promotion * 0.01);
+                    const discountedSubtotal = discountedPrice * quantity;
+                    const discountPercentage = promotion;
+
+                    product.find('.product-subtotal').html('<del>$' + subtotal.toFixed(2) + '</del>');
+                    product.find('.product-discounted-price').text('$' + discountedSubtotal.toFixed(2));
+                    product.find('.product-discount').text('-' + discountPercentage.toFixed(2) + '%');
+                } else {
+                    product.find('.product-discounted-price').html('');
+                    product.find('.product-subtotal').text('$' + subtotal.toFixed(2));
+                    product.find('.product-discount').text('');
+                }
+            }
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('.delete-btn').on('click', function () {
+                const cartId = $(this).data('cart-id');
+                $.ajax({
+                    url: '{{ url_for("cart.delete_item") }}',
+                    type: 'POST',
+                    data: {
+                        cart_id: cartId
+                    },
+                    success: function (data) {
+                        if (data.success) {
+                            alert(data.message);
+                            location.reload();
+                        } else {
+                            alert('Error: ' + data.message);
+                        }
+                    },
+                    error: function () {
+                        alert('Error: cannot delete item');
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $(".product-quantity").on("change", function () {
+                const cart_id = $(this).data("cart-id");
+                const new_quantity = $(this).val();
+
+                $.ajax({
+                    url: "{{ url_for('cart.update_cart_item') }}",
+                    type: "POST",
+                    data: {
+                        cart_id: cart_id,
+                        quantity: new_quantity
+                    },
+                    success: function (response) {
+                        if (response.success) {
+                            console.log(response.message);
+                        } else {
+                            console.error("Error: " + response.message);
+                        }
+                    },
+                    error: function () {
+                        console.error("Error: cannot update item");
+                    }
+                });
+            })
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            updateSummary()
+
+            $('input[name="quantity"]').on('input', function () {
+                const cartId = $(this).data('cart-id');
+                const newQuantity = parseInt($(this).val());
+                const productCheckbox = $(`.product-checkbox[data-cart-id=${cartId}]`);
+                productCheckbox.data('quantity', newQuantity);
+                updateSummary();
+            });
+
+            $('.product-checkbox').on('change', function () {
+                const cartId = $(this).data('cart-id');
+                const selected = $(this).is(':checked');
+
+                $.ajax({
+                    url: '/cart/update_selected',
+                    method: 'POST',
+                    data: {
+                        cart_id: cartId,
+                        selected: selected
+                    },
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            console.log('Updated selected status in database');
+                        } else {
+                            console.log('Error updating selected status');
+                        }
+                    }
+                });
+
+                updateSummary();
+            });
+
+
+            $('.select-all').on('click', function () {
+                $('.product-checkbox').prop('checked', true);
+                updateSelectedInDatabase(true);
+                updateSummary();
+            });
+
+            $('.delete-all').on('click', function () {
+                $('.product-checkbox').prop('checked', false);
+                updateSelectedInDatabase(false);
+                updateSummary();
+            });
+
+
+            $('.product-checkbox').on('change', function () {
+                updateSummary();
+            });
+
+            function updateSummary() {
+                let totalPrice = 0;
+                let discountedPrice = 0;
+
+                $('.product-checkbox:checked').each(function () {
+                    let price = parseFloat($(this).data('price'));
+                    const promotion = parseFloat($(this).data('promotion'));
+                    const quantity = parseInt($(this).data('quantity'));
+                    const duration_start_str = $(this).data('duration_start');
+                    const duration_end_str = $(this).data('duration_end');
+                    const now_str = $(this).data('now');
+
+                    const duration_start = duration_start_str ? new Date(duration_start_str) : null;
+                    const duration_end = duration_end_str ? new Date(duration_end_str) : null;
+                    const now = new Date(now_str);
+
+                    price = price * quantity;
+
+                    let finalPrice;
+
+                    if (now >= duration_start && now <= duration_end) {
+                        finalPrice = price * (1 - promotion * 0.01);
+                    } else {
+                        finalPrice = price;
+                    }
+
+                    totalPrice += price;
+                    discountedPrice += finalPrice;
+                });
+
+
+                $('#total-price').text(totalPrice.toFixed(2));
+                $('#discounted-price').text(discountedPrice.toFixed(2));
+            }
+
+            function updateSelectedInDatabase(selected) {
+                $('.product-checkbox').each(function () {
+                    const cartId = $(this).data('cart-id');
+                    $.ajax({
+                        url: '/cart/update_selected',
+                        method: 'POST',
+                        data: {
+                            cart_id: cartId,
+                            selected: selected
+                        }
+                    });
+                });
+            }
+
+
+            $(document).ready(function() {
+                $('.product-image').on('click', function() {
+                    const productId = $(this).data('product-id');
+                    window.location.href = "/detail/detail_page/" + productId;
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function(){
+            $("#start_date, #end_date, #number").on('keydown paste', function(e){
+                e.preventDefault();
+            });
+        });
+    </script>
+
+
+
+
+</head>
+<body>
+<header>
+    <a href="{{ url_for('home.home_page') }}" class="logo">Logo</a>
+    <div class="nav-wrapper">
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/home.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">Home</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/collection.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">Collection</div>
+            </div>
+        </a>
+        <a href="{{ url_for('cart.cart_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/cart.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">Cart</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/history.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">History</div>
+            </div>
+        </a>
+        <a href="{{ url_for('order.order_page') }}">
+            <div class="image-container">
+                <img src="{{ url_for('static', filename='icon/navbar/order.svg') }}" alt="Your Image Description"
+                     width="30" height="40"/>
+                <div class="hover-text">Order</div>
+            </div>
+        </a>
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('nav_user.info') }}">
+                    <img src="{{ url_for('static', filename='icon/navbar/user.svg') }}" alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="title-of-label">
+    <div class="move0">Product</div>
+    <div class="move1">Price</div>
+    <div class="move2">Quantity</div>
+    <div class="move3">Subtotal</div>
+    <div>Operation</div>
+</div>
+<div class="container">
+    {% for product in cart_products %}
+        <div class="product fade-in" data-price="{{ product.price }}" data-promotion="{{ product.promotion }}" data-duration_start="{{ product.duration_start }}" data-duration_end="{{ product.duration_end }}" data-now="{{ product.now }}">
+            <div class="vendor_name">Vendor: {{ product.vendor_name }}</div>
+            <input type="checkbox" class="product-checkbox custom-checkbox" data-cart-id="{{ product.cart_id }}"
+                   data-price="{{ product.price }}" data-promotion="{{ product.promotion }}"
+                   data-quantity="{{ product.quantity }}"
+                   data-now="{{ product.now }}" data-duration_start="{{ product.duration_start }}" data-duration_end="{{ product.duration_end }}"
+                   {% if product.selected %}checked{% endif %}>
+            <div class="product-image" data-product-id="{{ product.product_id }}">
+                <img src="{{ url_for('static', filename=product.picture) }}" alt="{{ product.name }}">
+            </div>
+            <div class="product-info">
+                <h2><span class="info">Product name: </span>{{ product.name }}</h2>
+                <br/>
+                <h3><span class="info">Description: </span>{{ product.description }}</h3>
+            </div>
+            <div class="product-price">$ {{ product.price }}</div>
+            <input type="number" name="quantity" value="{{ product.quantity }}" min="1" max="{{ product.stock }}"
+                   id="number" class="product-quantity" data-cart-id="{{ product.cart_id }}">
+            <div class="product-subtotal"></div>
+            <div class="product-discounted-price"></div>
+            <div class="product-discount"></div>
+
+            <button class="delete-btn" data-cart-id="{{ product.cart_id }}">Delete</button>
+        </div>
+    {% endfor %}
+</div>
+<div class="summary-sticky">
+    <button class="select-all">select all</button>
+    <button class="delete-all">cancel select</button>
+    <div class="summary-container">
+        <div class="total-price">Total Price: $ <span id="total-price" style=" text-decoration: line-through;
+    color: red">0.00</span></div>
+        <div class="discounted-price">Discounted Price: $ <span id="discounted-price">0.00</span></div>
+        <a href="javascript:void(0)" onclick="submitCheckout()" style="text-decoration: none" class="check-out">checkout</a>
+    </div>
+</div>
+<script>
+     function submitCheckout() {
+        const totalPrice = $('#total-price').text();
+        const discountedPrice = parseFloat($('#discounted-price').text());
+
+        // If the discount price is greater than 0, it is allowed to proceed to the next page
+        if (discountedPrice > 0) {
+            // Sets the input values in the form
+            $('#total-price-input').val(totalPrice);
+            $('#discounted-price-input').val(discountedPrice);
+
+
+            $('#checkout-form').submit();
+        } else {
+            alert('Discounted Price must be greater than 0 to proceed to the next page.');
+        }
+    }
+</script>
+
+
+
+
+<form id="checkout-form" action="/checkout/checkout_page" method="post" style="display:none;">
+    <input type="hidden" id="total-price-input" name="total_price" />
+    <input type="hidden" id="discounted-price-input" name="discounted_price" />
+</form>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="{{ url_for('static', filename='icon/footer/phone.svg') }}" alt="phone" width="30" height="30">Phone:
+                +86 13808243006
+            </p>
+            <p><img src="{{ url_for('static', filename='icon/footer/email.svg') }}" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="{{ url_for('static', filename='icon/footer/facebook.svg') }}" alt="facebook" width="30"
+                         height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/facebook.svg') }}" alt="youtube" width="30"
+                         height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/instagram.svg') }}" alt="instagram" width="30"
+                         height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/tiktok.svg') }}" alt="tiktok" width="30"
+                         height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

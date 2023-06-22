@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, user-scalable=yes">
+    <title>order page</title>
+    <link rel="stylesheet" href="../static/css/user_base.css">
+    <link rel="stylesheet" href="../static/css/order.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $(".status-btn").click(function () {
+                const status = $(this).data("status");
+                window.location.href = "/order/filter_order_status?status=" + status;
+            });
+        });
+    </script>
+</head>
+<header>
+    <a href="{{ url_for('home.home_page') }}" class="logo">Logo</a>
+    <div class="nav-wrapper">
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/home.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Home</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/collection.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Collection</div>
+            </div>
+        </a>
+        <a href="{{ url_for('cart.cart_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/cart.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Cart</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/history.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">History</div>
+            </div>
+        </a>
+        <a href="{{ url_for('order.order_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/order.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Order</div>
+            </div>
+        </a>
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('nav_user.info') }}">
+                    <img src="../static/icon/navbar/user.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<!-- Order status filter -->
+<div class="order-status-filter">
+    <button class="status-btn" data-status="all">All</button>
+    <button class="status-btn" data-status="pending">Pending</button>
+    <button class="status-btn" data-status="paid">Paid</button>
+    <button class="status-btn" data-status="shipped">Shipped</button>
+    <button class="status-btn" data-status="completed">Completed</button>
+    <button class="status-btn" data-status="cancelled">Cancelled</button>
+</div>
+
+<!-- Order cards container -->
+<div class="order-cards-container">
+    {% for payment_id, order_items in orders_data.items() %}
+        <div class="order-card  fade-in" data-status="{{ order_items[0].status }}">
+            <div class="payment-id">
+                Payment ID: {{ payment_id }}
+            </div>
+            <div class="time">
+                Created at: {{ order_items[0].order_time }}
+            </div>
+            <div class="order-status {{ 'status-' + order_items[0].status }}">
+                Payment Status: {{ order_items[0].status }}
+            </div>
+            <div class="finish-time">
+                {% if order_items[0].finish_time %}
+                    Finished at: {{ order_items[0].finish_time }}
+                {% else %}
+                    Finished at: you haven't finished this order yet
+                {% endif %}
+            </div>
+            <br>
+            <div class="order-items">
+                {% for item in order_items %}
+                    <hr>
+                    <br>
+                    <br>
+                    <div class="order-item">
+                        <div class="vendor_name">
+                            Vendor: {{ item.vendor_name }}
+                        </div>
+                        <div class="product-status {{ 'status-' + item.order_status }}">
+                            status: {{ item.order_status }}
+                        </div>
+                        <img src="{{ item.product_image }}" alt="Product Image">
+                        <div class="item-details">
+                            <p>Name: {{ item.product_name }}</p>
+                            <p>Desc: {{ item.product_description }}</p>
+                            <p class="price">Unit price: ${{ item.product_price }}</p>
+                            <p class="quantity">Quantity: {{ item.quantity }}</p>
+                            <p class="discounted">Discounted price: ${{ item.total_amount }}</p>
+                        </div>
+                        <div class="delivery_time">
+                            {% if item.delivery_time %}
+                                Delivery time: {{ item.delivery_time }}
+                            {% else %}
+                                Estimated time of arrival: None
+                            {% endif %}
+                        </div>
+                        <div class="notice">
+                            {% if item.announcement %}
+                                Notice: {{ item.announcement }}
+                            {% else %}
+                                Notice: None
+                            {% endif %}
+                        </div>
+{#                        {% if item.order_status == 'paid' %}#}
+{#                            <form action="{{ url_for('alipay.refund') }}" method="post">#}
+{#                                <input type="hidden" name="payment_id" value="{{ payment_id }}">#}
+{#                                <input type="hidden" name="refund_amount" value="{{ item.total_amount }}">#}
+{#                                <input type="hidden" name="order_id" value="{{ item.order_id }}">#}
+{#                                <button type="submit" class="refund-btn">Refund</button>#}
+{#                            </form>#}
+{#                        {% endif %}#}
+                        <form action="{{ url_for('order_detail.order_detail_page') }}" method="post">
+                            <input type="hidden" name="order_id" value="{{ item.order_id }}">
+                            <button type="submit" class="detail">Detail</button>
+                        </form>
+                    </div>
+                {% endfor %}
+            </div>
+            {% if order_items[0].order_status == 'pending' %}
+                <form action="{{ url_for('checkout.repay_page') }}" method="post">
+                    <input type="hidden" name="payment_id" value="{{ payment_id }}">
+                    <button type="submit" class="continue-payment-btn">Continue Payment</button>
+                </form>
+            {% endif %}
+        </div>
+    {% endfor %}
+</div>
+
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing
+                you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="../static/icon/footer/phone.svg" alt="phone" width="30" height="30">Phone: +86
+                13808243006
+            </p>
+            <p><img src="../static/icon/footer/email.svg" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="../static/icon/footer/facebook.svg" alt="facebook" width="30" height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="../static/icon/footer/youtube.svg" alt="youtube" width="30" height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="../static/icon/footer/instagram.svg" alt="instagram" width="30" height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="../static/icon/footer/tiktok.svg" alt="tiktok" width="30" height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

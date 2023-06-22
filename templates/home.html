@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}home page{% endblock %}</title>
+    <link rel="stylesheet" href="../static/css/home_page.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let isSearching = false;
+    </script>
+    <script>
+        {#==========carousel==============#}
+        $(document).ready(function () {
+            let slides = $('.carousel-slide');
+            let currentIndex = 0;
+            let autoPlayInterval = setInterval(nextSlide, 3000);
+            updateClasses()
+
+            function updateClasses() {
+                clearInterval(autoPlayInterval);
+                autoPlayInterval = setInterval(nextSlide, 3000);
+                slides.removeClass('prev next active');
+                slides.eq((currentIndex - 1 + slides.length) % slides.length).addClass('prev');
+                slides.eq(currentIndex).addClass('active');
+                slides.eq((currentIndex + 1) % slides.length).addClass('next');
+
+                // Updated the bottom navigation button style
+                let dots = $('.carousel-indicators button');
+                dots.removeClass('active-dot');
+                dots.eq(currentIndex).addClass('active-dot');
+
+            }
+
+            function nextSlide() {
+                currentIndex = (currentIndex + 1) % slides.length;
+                updateClasses();
+            }
+
+            function prevSlide() {
+                currentIndex = (currentIndex - 1 + slides.length) % slides.length;
+                updateClasses();
+            }
+
+            $('.carousel-controls .prev-button').click(function () {
+                prevSlide();
+            });
+
+            $('.carousel-controls .next-button').click(function () {
+                nextSlide();
+            });
+
+            $('.carousel-indicators button').click(function () {
+                currentIndex = parseInt($(this).attr('data-index'), 10);
+                updateClasses();
+            });
+        });
+    </script>
+    <script>
+        {#==========side bar==============#}
+        $(document).ready(function () {
+            $('.parent').click(function () {
+                const parentAlreadySelected = $(this).hasClass('parent-selected');
+                $('.children').slideUp();
+                $('.parent').removeClass('parent-selected');
+
+                if (!parentAlreadySelected) {
+                    $(this).addClass('parent-selected');
+                    $(this).siblings('.children').slideDown();
+                }
+            });
+
+            $('.child').click(function () {
+                $('.child').removeClass('child-selected');
+                $(this).addClass('child-selected');
+            });
+        });
+    </script>
+
+    <script>
+        {#==============load the products===========#}
+        $(document).ready(function () {
+            let isLoading = false;
+            let noMoreProducts = false;
+            let productCount = 0;
+            let currentCategoryId = null; // Add a global variable to store the currently selected category ID
+
+
+            function loadProducts(categoryId = currentCategoryId) {
+                if (isLoading || noMoreProducts) return;
+                isLoading = true;
+                const lastProduct = productCount > 0 ? $(`#product-${productCount - 1}`) : null;
+                const lastDate = lastProduct ? lastProduct.attr('data-release-date') : null;
+                const lastId = lastProduct ? lastProduct.attr('data-product-id') : null;
+                let url = `/home/products`;
+                if (lastDate && lastId) {
+                    url += `?last_date=${lastDate}&last_id=${lastId}`;
+                }
+                if (categoryId) {
+                    url += (url.includes('?') ? '&' : '?') + `category_id=${categoryId}`;
+                }
+                console.log('Request URL:', url);
+
+                $.getJSON(url, function (data) {
+                    if (data.length > 0) {
+                        data.forEach(function (product) {
+                            let imagePath = product.picture ? product.picture : "../static/product_img/No_Image_Available.png";
+                            let productElement = `
+                    <div class="product fade-in" id="product-${productCount}" data-release-date="${product.release_date}" data-product-id="${product.product_id}">
+                        <div class="product-image">
+                            <img src="${imagePath}" alt="Product Image">
+                        </div>
+                        <div class="text">
+                            <h4 class="truncate">${product.name}</h4>
+                            <p class="p1 truncate"><span>Vendor:</span> ${product.vendor_name}</p>
+                            <p class="p2">$ ${product.price}</p>
+                            <p class="time-diff">${product.time_diff} ago</p>
+                        </div>
+                    </div>`;
+                            $('.arrival').append(productElement);
+                            productCount++;
+                        });
+                    } else {
+                        noMoreProducts = true;
+                    }
+                    isLoading = false;
+                });
+            }
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 350) {
+                    if(!isSearching){
+                        loadProducts();
+                    }
+                }
+            });
+
+            $(document).ready(function () {
+                loadProducts();
+            });
+
+            $('.child').on('click', function() {
+                const categoryId = $(this).data('category-id');
+                // Clear previously loaded products
+                currentCategoryId = categoryId; // Update global variables when a category is clicked
+                $('.arrival').empty();
+                productCount = 0;
+                noMoreProducts = false;
+                isSearching = false;
+                loadProducts(categoryId);
+            });
+        });
+    </script>
+    <script>
+    $(document).ready(function () {
+            let isLoading = false;
+            let noMoreProducts = false;
+            let productCount = 0;
+            let currentCategoryId = null; // Add a global variable to store the currently selected category ID
+
+
+            function loadComments(categoryId = currentCategoryId) {
+                if (isLoading || noMoreProducts) return;
+                isLoading = true;
+                const lastProduct = productCount > 0 ? $(`#product-${productCount - 1}`) : null;
+                const lastDate = lastProduct ? lastProduct.attr('data-release-date') : null;
+                const lastId = lastProduct ? lastProduct.attr('data-product-id') : null;
+                let url = `/home/comments`;
+                if (lastDate && lastId) {
+                    url += `?last_date=${lastDate}&last_id=${lastId}`;
+                }
+                if (categoryId) {
+                    url += (url.includes('?') ? '&' : '?') + `category_id=${categoryId}`;
+                }
+                console.log('Request URL:', url);
+
+                $.getJSON(url, function (data) {
+                    if (data.length > 0) {
+                        data.forEach(function (product) {
+                            let imagePath = product.picture ? product.picture : "../static/product_img/No_Image_Available.png";
+                            let productElement = `
+                    <div class="product fade-in" id="product-${productCount}" data-release-date="${product.last_comment}" data-product-id="${product.product_id}">
+                        <div class="product-image">
+                            <img src="${imagePath}" alt="Product Image">
+                        </div>
+                        <div class="text">
+                            <h4 class="truncate">${product.name}</h4>
+                            <p class="p1 truncate"><span>Vendor:</span> ${product.vendor_name}</p>
+                            <p class="p2">$ ${product.price}</p>
+                            <p class="time-diff">${product.time_diff} ago</p>
+                        </div>
+                    </div>`;
+                            $('.comment').append(productElement);
+                            productCount++;
+                        });
+                    } else {
+                        noMoreProducts = true;
+                    }
+                    isLoading = false;
+                });
+            }
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 350) {
+                    if (!isSearching) {
+                        loadComments();
+                    }
+                }
+            });
+
+            $(document).ready(function () {
+                loadComments();
+            });
+
+            $('.child').on('click', function() {
+                const categoryId = $(this).data('category-id');
+                // Clear previously loaded products
+                currentCategoryId = categoryId; // Update global variables when a category is clicked
+                $('.comment').empty();
+                productCount = 0;
+                noMoreProducts = false;
+                isSearching = false;
+                loadComments(categoryId);
+            });
+        });
+
+
+    </script>
+    <script>
+        {#==============load the likes===========#}
+        $(document).ready(function () {
+            let isLoading = false;
+            let noMoreProducts = false;
+            let productCount = 0;
+            let currentCategoryId = null; // Add a global variable to store the currently selected category ID
+
+
+            function loadlikes(categoryId = currentCategoryId) {
+                if (isLoading || noMoreProducts) return;
+                isLoading = true;
+                const lastProduct = productCount > 0 ? $(`#product-${productCount - 1}`) : null;
+                const lastDate = lastProduct ? lastProduct.attr('data-release-date') : null;
+                const lastId = lastProduct ? lastProduct.attr('data-product-id') : null;
+                let url = `/home/likes`;
+                if (lastDate && lastId) {
+                    url += `?last_date=${lastDate}&last_id=${lastId}`;
+                }
+                if (categoryId) {
+                    url += (url.includes('?') ? '&' : '?') + `category_id=${categoryId}`;
+                }
+                console.log('Request URL:', url);
+
+                $.getJSON(url, function (data) {
+                    if (data.length > 0) {
+                        data.forEach(function (product) {
+                            let imagePath = product.picture ? product.picture : "../static/product_img/No_Image_Available.png";
+                            let productElement = `
+                    <div class="product fade-in" id="product-${productCount}" data-release-date="${product.last_like_dis}" data-product-id="${product.product_id}">
+                        <div class="product-image">
+                            <img src="${imagePath}" alt="Product Image">
+                        </div>
+                        <div class="text">
+                            <h4 class="truncate">${product.name}</h4>
+                            <p class="p1 truncate"><span>Vendor:</span> ${product.vendor_name}</p>
+                            <p class="p2">$ ${product.price}</p>
+                            <p class="time-diff">${product.time_diff} ago</p>
+                        </div>
+                    </div>`;
+                            $('.like').append(productElement);
+                            productCount++;
+                        });
+                    } else {
+                        noMoreProducts = true;
+                    }
+                    isLoading = false;
+                });
+            }
+
+            $(window).scroll(function () {
+                if ($(window).scrollTop() + $(window).height() >= $(document).height() - 350) {
+                    if (!isSearching){
+                        loadlikes();
+                    }
+                }
+            });
+
+            $(document).ready(function () {
+                loadlikes();
+            });
+
+            $('.child').on('click', function() {
+                const categoryId = $(this).data('category-id');
+
+                currentCategoryId = categoryId;
+                $('.like').empty();
+                productCount = 0;
+                noMoreProducts = false;
+                isSearching= false;
+                loadlikes(categoryId);
+            });
+        });
+    </script>
+    <script>
+     $(document).ready(function () {
+
+        $('input[type="text"]').on('keydown', function (event) {
+            if (event.key === "Enter") {
+                const searchQuery = $(this).val();
+                if (searchQuery.length >= 2) {
+                    isSearching = true;
+                    searchProducts(searchQuery);
+                }
+            }
+        });
+
+        function searchProducts(searchQuery) {
+            {#=====================arrival=========================#}
+            const url_products = `/home/search_products?query=${searchQuery}`;
+            $.getJSON(url_products, function (data) {
+                $('.arrival').empty();
+                let productCount = 0;
+
+                if (data.length > 0) {
+                    data.forEach(function (product) {
+                        let imagePath = product.picture ? product.picture : "../static/product_img/No_Image_Available.png";
+                        let productElement = `
+                            <div class="product fade-in" id="product-${productCount}" data-release-date="${product.release_date}" data-product-id="${product.product_id}">
+                                <div class="product-image">
+                                    <img src="${imagePath}" alt="Product Image">
+                                </div>
+                                <div class="text">
+                                    <h4 class="truncate">${product.name}</h4>
+                                    <p class="p1 truncate"><span>Vendor:</span> ${product.vendor_name}</p>
+                                    <p class="p2">$ ${product.price}</p>
+                                    <p class="time-diff">${product.time_diff} ago</p>
+                                </div>
+                            </div>`;
+                        $('.arrival').append(productElement);
+                        productCount++;
+                    });
+                } else {
+                    $('.arrival').append('<p class="no-search">No products found for your search query.</p>');
+                }
+            });
+            {#=====================comments=======================#}
+            const url_comments = `/home/search_comments?query=${searchQuery}`;
+            $.getJSON(url_comments, function (data) {
+                $('.comment').empty();
+                let productCount = 0;
+
+                if (data.length > 0) {
+                    data.forEach(function (product) {
+                        let imagePath = product.picture ? product.picture : "../static/product_img/No_Image_Available.png";
+                        let productElement = `
+                            <div class="product fade-in" id="product-${productCount}" data-release-date="${product.last_comment}" data-product-id="${product.product_id}">
+                                <div class="product-image">
+                                    <img src="${imagePath}" alt="Product Image">
+                                </div>
+                                <div class="text">
+                                    <h4 class="truncate">${product.name}</h4>
+                                    <p class="p1 truncate"><span>Vendor:</span> ${product.vendor_name}</p>
+                                    <p class="p2">$ ${product.price}</p>
+                                    <p class="time-diff">${product.time_diff} ago</p>
+                                </div>
+                            </div>`;
+                        $('.comment').append(productElement);
+                        productCount++;
+                    });
+                } else {
+                    $('.comment').append('<p class="no-search">No products found for your search query.</p>');
+                }
+            });
+            {#=============likes==================================#}
+            const url_likes = `/home/search_likes?query=${searchQuery}`;
+            $.getJSON(url_likes, function (data) {
+                $('.like').empty();
+                let productCount = 0;
+
+                if (data.length > 0) {
+                    data.forEach(function (product) {
+                        let imagePath = product.picture ? product.picture : "../static/product_img/No_Image_Available.png";
+                        let productElement = `
+                            <div class="product fade-in" id="product-${productCount}" data-release-date="${product.last_like_dis}" data-product-id="${product.product_id}">
+                                <div class="product-image">
+                                    <img src="${imagePath}" alt="Product Image">
+                                </div>
+                                <div class="text">
+                                    <h4 class="truncate">${product.name}</h4>
+                                    <p class="p1 truncate"><span>Vendor:</span> ${product.vendor_name}</p>
+                                    <p class="p2">$ ${product.price}</p>
+                                    <p class="time-diff">${product.time_diff} ago</p>
+                                </div>
+                            </div>`;
+                        $('.like').append(productElement);
+                        productCount++;
+                    });
+                } else {
+                    $('.like').append('<p class="no-search">No products found for your search query.</p>');
+                }
+            });
+        }
+    });
+    </script>
+
+    <script>
+      $(document).ready(function() {
+        $("body").on("click", ".product", function() {
+          const productId = $(this).data("product-id");
+          window.location.href = "/detail/detail_page/" + productId;
+        });
+      });
+    </script>
+
+
+
+
+</head>
+<body>
+<header>
+    <a href="{{ url_for('home.home_page') }}" class="logo">Logo</a>
+    <div class="search">
+        <label>
+            <input type="text" placeholder="Search" maxlength="50">
+            <img src="../static/icon/navbar/search.svg" alt="search" width="30" height="40">
+        </label>
+        <i class="fa fa-search" aria-hidden="true"></i>
+    </div>
+    <div class="nav-wrapper">
+        {% if session.get('user_type') == 'customer' %}
+            <a href="{{ url_for('home.home_page') }}">
+                <div class="image-container">
+                    <img src="../static/icon/navbar/home.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">Home</div>
+                </div>
+            </a>
+            <a href="{{ url_for('home.home_page') }}">
+                <div class="image-container">
+                    <img src="../static/icon/navbar/collection.svg" alt="Your Image Description" width="30"
+                         height="40"/>
+                    <div class="hover-text">Collection</div>
+                </div>
+            </a>
+            <a href="{{ url_for('cart.cart_page') }}">
+                <div class="image-container">
+                    <img src="../static/icon/navbar/cart.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">Cart</div>
+                </div>
+            </a>
+            <a href="{{ url_for('home.home_page') }}">
+                <div class="image-container">
+                    <img src="../static/icon/navbar/history.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">History</div>
+                </div>
+            </a>
+            <a href="{{ url_for('order.order_page') }}">
+                <div class="image-container">
+                    <img src="../static/icon/navbar/order.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">Order</div>
+                </div>
+            </a>
+        {% endif %}
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('nav_user.info') }}">
+                    <img src="../static/icon/navbar/user.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="carousel">
+    <div class="carousel-slide prev">
+        <img src="../static/poster/post1.png" alt="Image 4">
+    </div>
+    <div class="carousel-slide active">
+        <img src="../static/poster/post2.png" alt="Image 1">
+    </div>
+    <div class="carousel-slide next">
+        <img src="../static/poster/post3.png" alt="Image 2">
+    </div>
+    <div class="carousel-slide">
+        <img src="../static/poster/post4.png" alt="Image 3">
+    </div>
+    <div class="carousel-controls">
+        <button class="prev-button">&lt;</button>
+        <button class="next-button">&gt;</button>
+    </div>
+    <div class="carousel-indicators">
+        <button data-index="0"></button>
+        <button data-index="1"></button>
+        <button data-index="2"></button>
+        <button data-index="3"></button>
+    </div>
+
+</div>
+<div class="title-of-label">
+    <div>Category</div>
+    <div>New Arrivals</div>
+    <div>New Comments</div>
+    <div>New likes/dislikes</div>
+</div>
+<div class="container">
+    <div class="sidebar">
+        {% for category in categories %}
+            {% if category.parent_id is none %}
+                <div class="category">
+                    <div class="parent">{{ category.category_name }}</div>
+                    <div class="children">
+                        {% for subcategory in categories %}
+                            {% if subcategory.parent_id == category.category_id %}
+                                <div class="child" data-category-id="{{ subcategory.category_id }}">{{ subcategory.category_name }}</div>
+                            {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endif %}
+        {% endfor %}
+    </div>
+    <div class="three-lists">
+        <div class="arrival">
+
+        </div>
+
+        <div class="comment">
+
+        </div>
+        <div class="like">
+
+        </div>
+    </div>
+</div>
+
+{#{% block content %}{% endblock %}#}
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="../static/icon/footer/phone.svg" alt="phone" width="30" height="30">Phone: +86 13808243006
+            </p>
+            <p><img src="../static/icon/footer/email.svg" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="../static/icon/footer/facebook.svg" alt="facebook" width="30" height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="../static/icon/footer/youtube.svg" alt="youtube" width="30" height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="../static/icon/footer/instagram.svg" alt="instagram" width="30" height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="../static/icon/footer/tiktok.svg" alt="tiktok" width="30" height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

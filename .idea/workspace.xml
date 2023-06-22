@@ -1,0 +1,266 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c8df2579-b6ec-4902-9971-a19798581338" name="Changes" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="JavaScript File" />
+        <option value="CSS File" />
+        <option value="Python Script" />
+        <option value="HTML File" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="PUSH_TAGS">
+      <GitPushTagMode>
+        <option name="argument" value="--follow-tags" />
+        <option name="title" value="Current Branch" />
+      </GitPushTagMode>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="92b50531-d708-49bb-9393-b9e71116a8af" />
+        <option name="url" value="https://github.com/DarrylXzq/webtest.git" />
+      </UrlAndAccount>
+    </option>
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2On7v1qsmhhxkzi694QjI4OhVzX" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/23076/webtest/static/products",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "settings.editor.selected.configurable": "vcs.Git",
+    "vue.rearranger.settings.migration": "true"
+  },
+  "keyToStringList": {
+    "ChangesTree.GroupingKeys": [
+      "directory"
+    ],
+    "DatabaseDriversLRU": [
+      "mysql"
+    ]
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\23076\webtest\static\products" />
+      <recent name="C:\Users\23076\webtest\static\product_img" />
+      <recent name="C:\Users\23076\webtest\static\poster" />
+      <recent name="C:\Users\23076\webtest\static\png" />
+      <recent name="C:\Users\23076\webtest" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\23076\webtest\static\png" />
+      <recent name="C:\Users\23076\webtest\static\uploads" />
+    </key>
+  </component>
+  <component name="RunManager" selected="Python tests.Python tests in webtest">
+    <configuration name="app" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="webtest" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/app.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="webtest" type="Python.FlaskServer">
+      <module name="webtest" />
+      <option name="target" value="$PROJECT_DIR$/app.py" />
+      <option name="targetType" value="PATH" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="" />
+      <option name="IS_MODULE_SDK" value="false" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="launchJavascriptDebuger" value="false" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests in webtest" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="webtest" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;$PROJECT_DIR$&quot;" />
+      <option name="_new_targetType" value="&quot;PATH&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Python tests in webtest" />
+        <item itemvalue="Python.app" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c8df2579-b6ec-4902-9971-a19798581338" name="Changes" comment="" />
+      <changelist id="" name="New changelist" comment="" />
+      <created>1682184718576</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1682184718576</updated>
+      <workItem from="1682184719822" duration="554000" />
+      <workItem from="1682217845317" duration="42529000" />
+      <workItem from="1682301646832" duration="3773000" />
+      <workItem from="1682305714937" duration="41453000" />
+      <workItem from="1682381359359" duration="2025000" />
+      <workItem from="1682383397415" duration="14007000" />
+      <workItem from="1682410405647" duration="4270000" />
+      <workItem from="1682419739055" duration="3645000" />
+      <workItem from="1682427151718" duration="11090000" />
+      <workItem from="1682439842198" duration="569000" />
+      <workItem from="1682470917358" duration="38302000" />
+      <workItem from="1682579296324" duration="15688000" />
+      <workItem from="1682598740335" duration="12682000" />
+      <workItem from="1682665829307" duration="16304000" />
+      <workItem from="1682682560682" duration="84000" />
+      <workItem from="1682688196542" duration="59000" />
+      <workItem from="1682689502372" duration="9000" />
+      <workItem from="1682774100466" duration="61000" />
+      <workItem from="1682774172769" duration="62000" />
+      <workItem from="1682774245612" duration="5126000" />
+      <workItem from="1682824029829" duration="31983000" />
+      <workItem from="1682911582066" duration="6353000" />
+      <workItem from="1682925658525" duration="5291000" />
+      <workItem from="1682931485592" duration="11900000" />
+      <workItem from="1682951273776" duration="147000" />
+      <workItem from="1682951677255" duration="58000" />
+      <workItem from="1682999394752" duration="20661000" />
+      <workItem from="1683031900910" duration="11007000" />
+      <workItem from="1683079372081" duration="1590000" />
+      <workItem from="1683103420979" duration="18227000" />
+      <workItem from="1683174201952" duration="26645000" />
+      <workItem from="1683213680924" duration="2596000" />
+      <workItem from="1683255406154" duration="1395000" />
+      <workItem from="1683258197388" duration="30355000" />
+      <workItem from="1683340870836" duration="36582000" />
+      <workItem from="1683426728730" duration="44670000" />
+      <workItem from="1683477110666" duration="79000" />
+      <workItem from="1683511239118" duration="37693000" />
+      <workItem from="1683598276892" duration="654000" />
+      <workItem from="1683606327454" duration="5830000" />
+      <workItem from="1683620153271" duration="1780000" />
+      <workItem from="1683621946279" duration="25550000" />
+      <workItem from="1683680480132" duration="5942000" />
+      <workItem from="1683692524279" duration="31501000" />
+      <workItem from="1683765194359" duration="5096000" />
+      <workItem from="1683780124247" duration="7143000" />
+      <workItem from="1683793169648" duration="24410000" />
+      <workItem from="1683821200734" duration="2685000" />
+      <workItem from="1683849110920" duration="39640000" />
+      <workItem from="1684224921370" duration="1682000" />
+      <workItem from="1684374577708" duration="102000" />
+      <workItem from="1684374849702" duration="43721000" />
+      <workItem from="1684493614833" duration="938000" />
+      <workItem from="1684533239297" duration="1076000" />
+      <workItem from="1684542683810" duration="23432000" />
+      <workItem from="1684590032718" duration="10994000" />
+      <workItem from="1684631981350" duration="77000" />
+      <workItem from="1684677742763" duration="6981000" />
+      <workItem from="1684792895059" duration="4369000" />
+      <workItem from="1684797750046" duration="6592000" />
+      <workItem from="1684825606631" duration="203000" />
+      <workItem from="1684985115102" duration="5000" />
+      <workItem from="1685011742073" duration="437000" />
+      <workItem from="1685178579975" duration="773000" />
+      <workItem from="1685240839885" duration="13688000" />
+      <workItem from="1685327819279" duration="9834000" />
+      <workItem from="1687430828922" duration="2505000" />
+      <workItem from="1687433364984" duration="359000" />
+      <workItem from="1687433734977" duration="3741000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="UnknownFeatures">
+    <option featureType="com.intellij.fileTypeFactory" implementationName="*.pem" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/webtest$.coverage" NAME=" Coverage Results" MODIFIED="1687438757941" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/webtest$nav_user.coverage" NAME="nav_user Coverage Results" MODIFIED="1682255883352" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$/customer" />
+    <SUITE FILE_PATH="coverage/webtest$app.coverage" NAME="app Coverage Results" MODIFIED="1685362266813" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
+    <SUITE FILE_PATH="coverage/webtest$webtest.coverage" NAME="webtest Coverage Results" MODIFIED="1687431599804" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
+  </component>
+</project>

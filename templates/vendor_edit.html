@@ -1,0 +1,155 @@
+{% extends 'vendor_upload.html' %}
+{% block script %}
+    <script>
+        $(document).ready(function () {
+            // Get the parent class and fill it in the parent class drop-down box
+            $.getJSON('/vendor_upload/get_parent_categories', function (parentCategories) {
+                const $parentCategorySelect = $('#parent_category');
+                $.each(parentCategories, function (index, parentCategory) {
+                    $('<option>', {
+                        value: parentCategory.category_id,
+                        text: parentCategory.category_name
+                    }).appendTo($parentCategorySelect);
+                });
+
+                // Sets the selected parent category
+                $parentCategorySelect.val('{{ category.parent_id }}');
+                // Fill the subcategory into the subcategory drop down box when the page loads
+                $parentCategorySelect.trigger('change');
+            });
+
+            // Adds an event listener for the parent class drop-down box to request the backend to update the options for the subclass drop-down box when the selected parent class changes
+            $('#parent_category').on('change', function () {
+                const parentId = $(this).val();
+                $.getJSON('/vendor_upload/get_sub_categories/' + parentId, function (subCategories) {
+                    const $subCategorySelect = $('#sub_category');
+                    $subCategorySelect.empty();
+
+                    $.each(subCategories, function (index, subCategory) {
+                        $('<option>', {
+                            value: subCategory.category_id,
+                            text: subCategory.category_name
+                        }).appendTo($subCategorySelect);
+                    });
+
+                    // Sets the selected subcategory
+                    if (parentId === '{{ category.parent_id }}') {
+                        $subCategorySelect.val('{{ category.category_id }}');
+                    }
+                });
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#image').on('change', function () {
+                var preview = $('#preview');
+                var file = this.files[0];
+                var reader = new FileReader();
+
+                reader.onloadend = function () {
+                    preview.attr('src', reader.result);
+                    preview.css('display', 'block');
+                }
+
+                if (file) {
+                    reader.readAsDataURL(file);
+                } else {
+                    preview.attr('src', '');
+                    preview.css('display', 'none');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#price').on('input', function () {
+                if ($(this).val() < 0) $(this).val(0);
+                if ($(this).val().length > 10) $(this).val($(this).val().slice(0, 10));
+            });
+
+            $('#stock').on('input', function () {
+                if ($(this).val() < 1) $(this).val(1);
+                if ($(this).val().length > 8) $(this).val($(this).val().slice(0, 8));
+            });
+
+            $('#promotion').on('input', function () {
+                if ($(this).val() < 0) $(this).val(0);
+                if ($(this).val() > 100) $(this).val(100);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#start_date").on('keydown paste', function (e) {
+                e.preventDefault();
+            });
+
+            $("#end_date").on('keydown paste', function (e) {
+                e.preventDefault();
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div class="product-form">
+        <form id="product-form" method="post" action="/vendor_view/update_product" enctype="multipart/form-data">
+            <input type="hidden" id="product_id" name="product_id" value="{{ product.product_id }}">
+
+            <label for="image">Image:</label>
+            <input type="hidden" id="original_image" name="original_image"
+                   value="{{ product.picture }}">
+
+            <img id="preview" src="{{ url_for('static', filename=product.picture[10:]) }}" alt="Image Preview"
+                 style="max-width:200px;max-height:200px;">
+            <input type="file" id="image" name="image" accept="image/*">
+            <br>
+
+            <label for="name">Name:</label>
+            <input type="text" id="name" name="name" value="{{ product.name }}" maxlength="20" required><br>
+
+            <label for="description">Description:</label>
+            <input type="text" id="description" name="description" value="{{ product.description }}" maxlength="70"
+                   required><br>
+
+            <label for="price">Price:</label>
+            <input type="number" id="price" name="price" value="{{ product.price }}" step="1" min="0" maxlength="10"
+                   required><br>
+
+            <label for="stock">Stock:</label>
+            <input type="number" id="stock" name="stock" value="{{ product.stock }}" step="1" min="1" maxlength="8"
+                   required><br>
+
+            <label for="status">Status:</label>
+            <select id="status" name="status" required>
+                <option value="active" {% if product.product_status == 'active' %}selected{% endif %}>active</option>
+                <option value="inactive" {% if product.product_status == 'inactive' %}selected{% endif %}>inactive
+                </option>
+            </select><br>
+
+            <label for="promotion">Promotion:</label>
+            <input type="number" id="promotion" name="promotion" value="{{ product.promotion }}" step="1" min="0"
+                   max="100" required><br>
+
+            <label for="start_date">Start Date:</label>
+            <input type="date" id="start_date" name="start_date"
+                   value="{{ product.duration_start.strftime('%Y-%m-%d') }}" required>
+
+            <label for="end_date">End Date:</label>
+            <input type="date" id="end_date" name="end_date" value="{{ product.duration_end.strftime('%Y-%m-%d') }}"
+                   required>
+
+            <label for="parent_category">Parent Category:</label>
+            <select id="parent_category" name="parent_category" required>
+
+            </select><br>
+
+            <label for="sub_category">Sub Category:</label>
+            <select id="sub_category" name="sub_category" required>
+
+            </select><br>
+
+            <input type="submit" value="Update">
+        </form>
+    </div>
+{% endblock %}

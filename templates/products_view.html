@@ -1,0 +1,76 @@
+{% extends 'vendor_upload.html' %}
+
+{% block script %}
+    <link rel="stylesheet" href="../static/css/vendor_view.css">
+    <script>
+        $(document).ready(function () {
+            // Request the merchant's list of products
+            $.ajax({
+                url: '/vendor_view/vendor_products',
+                type: 'GET',
+                success: function (products) {
+                    // Generate a list of products on the page
+                    products.forEach(function (product) {
+                        const statusDotClass = product.product_status === 'active' ? 'dot-active' : 'dot-inactive';
+                        const productElem = `
+                            <div class="product fade-in">
+                                <div class="product-image">
+                                    <img src="${product.picture}" alt="${product.name}">
+                                </div>
+                                <div class="product-details">
+                                    <p><span>Name:</span> ${product.name}</p>
+                                    <p><span>Desc:</span> ${product.description}</p>
+                                    <p><span>Price:</span> $ ${product.price}</p>
+                                    <p><span>Stock:</span>  ${product.stock}</p>
+                                    <p id="release-date"><span>Release date:</span> ${product.release_date}</p>
+                                    <p id="status"> <span class="status-dot ${statusDotClass}"></span><span>Status:</span> ${product.product_status}</p>
+                                    <p><span>Promotion:</span> ${product.promotion} %</p>
+                                    <div class="time">
+                                        <p><span>Duration start:</span> ${product.duration_start}</p>
+                                        <p><span>Duration end:</span> ${product.duration_end}</p>
+                                    </div>
+                                </div>
+                                <div class="product-buttons">
+                                    <button class="btn-edit" onclick="location.href='/vendor_view/edit_product/${product.product_id}'">Edit</button>
+                                    <button class="btn-delete" data-product-id="${product.product_id}">Delete</button>
+                                </div>
+                            </div>
+                        `;
+                        $('#products-container').append(productElem);
+                    });
+                },
+                error: function () {
+                    alert('Failed to load products.');
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('body').on('click', '.btn-delete', function () {
+                const product_id = $(this).data('product-id');
+                $.ajax({
+                    url: '/vendor_view/delete_product',
+                    type: 'POST',
+                    data: {product_id: product_id},
+                    success: function (response) {
+                        if (response.status === 'success') {
+                            alert('Product deleted.');
+                        } else {
+                            alert('Failed to delete product.');
+                        }
+                        window.location.reload();
+                    },
+                    error: function () {
+                        alert('Failed to delete product.');
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+{% block content %}
+    <div id="products-container">
+
+    </div>
+{% endblock %}

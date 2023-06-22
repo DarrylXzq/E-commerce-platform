@@ -1,0 +1,85 @@
+{% extends 'vendor_upload.html' %}
+
+{% block script %}
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vendor_order.css') }}">
+    <script>
+        $(document).ready(function () {
+            $(".status-btn").click(function () {
+                const status = $(this).data("status");
+                window.location.href = "/vendor_order/filter_order_status?status=" + status;
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="order-status-filter">
+        <button class="status-btn" data-status="all">All</button>
+        <button class="status-btn" data-status="paid">Paid</button>
+        <button class="status-btn" data-status="shipped">Shipped</button>
+        <button class="status-btn" data-status="completed">Completed</button>
+    </div>
+    <div class="order-cards-container">
+        {% for order_item in orders_data %}
+            <div class="order-card fade-in" data-status="{{ order_item.order_status }}">
+                {#                <div class="payment-id">#}
+                {#                    Payment ID: {{ order_item.payment_id }}#}
+                {#                </div>#}
+                {#                <div class="time">#}
+                {#                    Created at: {{ order_item.payment_time }}#}
+                {#                </div>#}
+                {#                <div class="order-status {{ 'status-' + order_item.payment_status }}">#}
+                {#                    Payment Status: {{ order_item.payment_status }}#}
+                {#                </div>#}
+                <div class="finish-time">
+                    {% if order_item.finish_time %}
+                        Payment finished at: {{ order_item.finish_time }}
+                    {% else %}
+                        Payment finished at: You haven't finished this order yet
+                    {% endif %}
+                </div>
+                <br>
+                <div class="order-item">
+                    {#                    <div class="vendor_name">#}
+                    {#                        Vendor: {{ order_item.vendor_name }}#}
+                    {#                    </div>#}
+                    <div class="product-status {{ 'status-' + order_item.order_status }}">
+                        Status Status: {{ order_item.order_status }}
+                    </div>
+                    <img src="{{ order_item.product_image }}" alt="Product Image">
+                    <div class="item-details">
+                        <p>Name: {{ order_item.product_name }}</p>
+                        <p>Desc: {{ order_item.product_description }}</p>
+                        <p class="price">Unit price: ${{ order_item.product_price }}</p>
+                        <p class="quantity">Quantity: {{ order_item.quantity }}</p>
+                        <p class="discounted">Discounted price: ${{ order_item.total_amount }}</p>
+                    </div>
+                    <div class="delivery_time">
+                        {% if order_item.delivery_time %}
+                            Delivery time: {{ order_item.delivery_time }}
+                        {% else %}
+                            Estimated time of arrival: None
+                        {% endif %}
+                    </div>
+                    <div class="notice">
+                        {% if order_item.announcement %}
+                            Notice: {{ order_item.announcement }}
+                        {% else %}
+                            Notice: None
+                        {% endif %}
+                    </div>
+                    <form action="{{ url_for('vendor_order_detail.vendor_order_detail_page') }}" method="post">
+                        <input type="hidden" name="order_id" value="{{ order_item.order_id }}">
+                        <button type="submit" class="detail">Detail</button>
+                    </form>
+                </div>
+                {#                {% if order_item.order_status == 'pending' %}#}
+                {#                    <form action="{{ url_for('alipay.continue_payment') }}" method="post">#}
+                {#                        <input type="hidden" name="payment_id" value="{{ order_item.payment_id }}">#}
+                {#                        <button type="submit" class="continue-payment-btn">Continue Payment</button>#}
+                {#                    </form>#}
+                {#                {% endif %}#}
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}

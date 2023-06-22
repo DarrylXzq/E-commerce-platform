@@ -1,0 +1,149 @@
+CREATE TABLE customers
+(
+    customer_id    INT,
+    name           VARCHAR(255),
+    email          VARCHAR(255),
+    phone          VARCHAR(255),
+    registration_c DATETIME,
+    primary key (customer_id)
+);
+
+CREATE INDEX customer_email_idx ON customers (email);
+CREATE INDEX customer_phone_idx ON customers (phone);
+
+CREATE TABLE vendors
+(
+    vendor_id      INT,
+    name           VARCHAR(255),
+    email          VARCHAR(255),
+    phone          VARCHAR(255),
+    country        VARCHAR(255),
+    registration_v DATETIME,
+    primary key (vendor_id)
+);
+
+CREATE INDEX vendor_email_idx ON vendors (email);
+CREATE INDEX vendor_phone_idx ON vendors (phone);
+
+CREATE TABLE addresses_customer
+(
+    address_id    INT          NOT NULL AUTO_INCREMENT,
+    customer_id   INT          NOT NULL,
+    country_name  VARCHAR(50)  NOT NULL,
+    province_name VARCHAR(50)  NOT NULL,
+    city_name     VARCHAR(50)  NOT NULL,
+    address       VARCHAR(100) NOT NULL,
+    PRIMARY KEY (address_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
+);
+
+CREATE TABLE addresses_vendor
+(
+    address_id    INT          NOT NULL AUTO_INCREMENT,
+    vendor_id     INT          NOT NULL,
+    country_name  VARCHAR(50)  NOT NULL,
+    province_name VARCHAR(50)  NOT NULL,
+    city_name     VARCHAR(50)  NOT NULL,
+    address       VARCHAR(100) NOT NULL,
+    PRIMARY KEY (address_id),
+    FOREIGN KEY (vendor_id) REFERENCES vendors (vendor_id)
+);
+
+CREATE TABLE categories
+(
+    category_id   INT NOT NULL,
+    category_name varchar(255) DEFAULT NULL,
+    parent_id           INT NOT NULL DEFAULT '0',
+    path          varchar(255) DEFAULT NULL,
+    level         INT          DEFAULT NULL,
+    PRIMARY KEY (category_id),
+    FOREIGN KEY (parent_id) REFERENCES categories (category_id)
+);
+CREATE INDEX path_idx ON categories (path);
+CREATE INDEX level_idx ON categories (level);
+
+CREATE TABLE products
+(
+    product_id  INT PRIMARY KEY,
+    vendor_id   INT,
+    category_id INT,
+    name        VARCHAR(255),
+    description TEXT,
+    price       DECIMAL(10, 2),
+    stock       INT,
+    picture     BLOB,
+    likes       INT,
+    dislikes    INT,
+    discount    DECIMAL(10, 2),
+    duration    DATETIME,
+    FOREIGN KEY (vendor_id) REFERENCES vendors (vendor_id),
+    FOREIGN KEY (category_id) REFERENCES categories (category_id)
+);
+
+
+CREATE TABLE orders
+(
+    order_id      INT,
+    customer_id   INT,
+    product_id    INT,
+    quantity      INT,
+    total_amount  DECIMAL(10, 2),
+    order_time    DATETIME,
+    payment_time  DATETIME,
+    delivery_time DATETIME,
+    confirm_time  DATETIME,
+    status        VARCHAR(20),
+    PRIMARY KEY (order_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+CREATE TABLE cart
+(
+    cart_id     INT,
+    customer_id INT,
+    product_id  INT,
+    quantity    INT,
+    PRIMARY KEY (cart_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+CREATE TABLE comments
+(
+    comment_id     INT,
+    customer_id    INT,
+    product_id     INT,
+    comment        TEXT,
+    like_button    boolean,
+    dislike_button boolean,
+    comment_date   DATETIME,
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+
+CREATE TABLE history
+(
+    history_id  INT,
+    customer_id INT,
+    product_id  INT,
+    action_time DATETIME,
+    PRIMARY KEY (history_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+CREATE TABLE payment
+(
+    payment_id     INT,
+    customer_id    INT,
+    order_id       INT,
+    payment_method VARCHAR(255),
+    payment_date   DATETIME,
+    payment_amount DECIMAL(10, 2),
+    PRIMARY KEY (payment_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (order_id) REFERENCES orders (order_id)
+);

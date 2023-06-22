@@ -1,0 +1,231 @@
+.container {
+    width: 80%;
+    margin: 30px auto;
+    background-color: #c5c0c0;
+    border-radius: 20px;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.product {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    background-color: #b99e84;
+    margin: 30px;
+    border-radius: 10px;
+    position: relative;
+}
+
+.vendor_name {
+    width: 100%;
+    font-size: 1.4em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.product-image {
+    width: 150px;
+    height: 150px;
+    margin: 20px;
+}
+
+.product-image img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+}
+
+.product-info {
+    padding-left: 20px;
+    position: absolute;
+    top: 100px;
+    left: 200px;
+}
+
+.product-info .info {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-right: 20px;
+}
+
+/*===============================================================*/
+.comments {
+    background-color: #9f9999;
+    margin: 30px;
+    padding: 5px;
+    border-radius: 10px;
+}
+
+.comment {
+    position: relative;
+    margin: 20px;
+    padding: 10px;
+    background-color: #e8e5e5;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateX(-40px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(10px);
+    }
+}
+
+.fade-in {
+    animation-name: fadeIn;
+    animation-duration: 1s;
+    animation-fill-mode: both;
+}
+
+.comment .comment-avatar {
+    width: 50px;
+    height: 50px;
+    position: absolute;
+    top: -20px;
+}
+
+.comment .comment-avatar img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
+
+.comment .comment-customer {
+    font-weight: bold;
+    margin-top: 5px;
+    font-size: 1.1em;
+    position: absolute;
+    top: -10px;
+    left: 70px;
+
+}
+
+.comment .comment-date {
+    font-size: 0.9em;
+    color: #000000;
+    margin-top: 5px;
+    font-weight: bold;
+    position: absolute;
+    top: -5px;
+    right: 30px;
+}
+
+.comment .comment-text {
+    font-size: 1.1em;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 10px;
+    position: absolute;
+    top: 15px;
+}
+
+/*===============================================*/
+.submit {
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: rgba(196, 187, 187, 0.9);
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    border-radius: 5px;
+}
+
+.submit form {
+    display: flex;
+    flex-direction: column;
+}
+
+.comment-text {
+    margin-bottom: 10px;
+}
+
+.comment-text textarea {
+    width: 100%;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.comment-submit,
+.comment-cancel {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+}
+
+.comment-submit {
+    position: absolute;
+    right: 150px;
+    bottom: 20px;
+}
+
+.comment-submit input,
+.comment-cancel input {
+    background-color: #4CAF50;
+    border: none;
+    color: white;
+    padding: 12px 24px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    margin-right: 10px;
+}
+
+.comment-submit input:hover,
+.comment-cancel input:hover {
+    background-color: #45a049;
+}
+
+.comment-cancel input {
+    background-color: #f44336;
+}
+
+.comment-cancel input:hover {
+    background-color: #e53935;
+}
+
+.review-all {
+    position: absolute;
+    z-index: 100;
+    left: 10px;
+    top: 80px;
+    background-color: #77704d;
+    border: none;
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    padding: 10px 24px;
+    border-radius: 10px;
+    transition: background-color 0.3s;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.review-all:hover {
+    background-color: #a89d66;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    text-decoration: none;
+    color: inherit;
+}

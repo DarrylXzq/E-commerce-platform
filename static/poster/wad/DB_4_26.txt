@@ -1,0 +1,170 @@
+CREATE TABLE customers
+(
+    customer_id    INT AUTO_INCREMENT,
+    name           VARCHAR(255) NOT NULL UNIQUE,
+    password       VARCHAR(255) NOT NULL,
+    email          VARCHAR(255) NOT NULL UNIQUE,
+    phone          VARCHAR(255) NOT NULL UNIQUE,
+    birthday       DATE,
+    gender         ENUM ('Male', 'Female'),
+    registration_c DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (customer_id)
+);
+
+CREATE TABLE vendors
+(
+    vendor_id      INT AUTO_INCREMENT,
+    name           VARCHAR(255) NOT NULL UNIQUE,
+    password       VARCHAR(255) NOT NULL,
+    email          VARCHAR(255) NOT NULL UNIQUE,
+    phone          VARCHAR(255) NOT NULL UNIQUE,
+    registration_v DATETIME     NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (vendor_id)
+);
+
+CREATE TABLE categories
+(
+    category_id   INT AUTO_INCREMENT,
+    category_name VARCHAR(255) NOT NULL,
+    parent_id     INT          NOT NULL DEFAULT '0',
+    level         INT          NOT NULL,
+    PRIMARY KEY (category_id),
+    FOREIGN KEY (parent_id) REFERENCES categories (category_id)
+);
+CREATE INDEX level_idx ON categories (level);
+
+CREATE TABLE products
+(
+    product_id     INT AUTO_INCREMENT,
+    vendor_id      INT            NOT NULL,
+    category_id    INT            NOT NULL,
+    name           VARCHAR(255)   NOT NULL,
+    description    TEXT,
+    price          DECIMAL(10, 2) NOT NULL,
+    stock          INT            NOT NULL,
+    picture        LONGBLOB,
+    likes          INT DEFAULT 0,
+    dislikes       INT DEFAULT 0,
+    promotion      DECIMAL(10, 2),
+    duration_start DATETIME,
+    duration_end   DATETIME,
+    release_date   DATETIME,
+    product_status ENUM ('active', 'inactive'),
+    PRIMARY KEY (product_id),
+    FOREIGN KEY (vendor_id) REFERENCES vendors (vendor_id),
+    FOREIGN KEY (category_id) REFERENCES categories (category_id)
+);
+
+CREATE TABLE payment
+(
+    payment_id   INT AUTO_INCREMENT,
+    payment_date DATETIME,
+    PRIMARY KEY (payment_id)
+);
+
+CREATE TABLE orders
+(
+    order_id      INT AUTO_INCREMENT,
+    customer_id   INT            NOT NULL,
+    product_id    INT            NOT NULL,
+    quantity      INT            NOT NULL,
+    total_amount  DECIMAL(10, 2) NOT NULL,
+    order_time    DATETIME       NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    payment_time  DATETIME,
+    delivery_time DATETIME,
+    confirm_time  DATETIME,
+    status        ENUM ('pending', 'paid', 'shipped', 'completed', 'cancelled'),
+    payment_id    INT,
+    PRIMARY KEY (order_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id),
+    FOREIGN KEY (payment_id) REFERENCES payment (payment_id)
+);
+
+CREATE TABLE announcements
+(
+    announcement_id   INT AUTO_INCREMENT,
+    order_id          INT      NOT NULL,
+    content           TEXT     NOT NULL,
+    announcement_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (announcement_id),
+    FOREIGN KEY (order_id) REFERENCES orders (order_id)
+);
+
+CREATE TABLE carts
+(
+    cart_id     INT AUTO_INCREMENT,
+    customer_id INT      NOT NULL,
+    product_id  INT      NOT NULL,
+    quantity    INT      NOT NULL,
+    add_time    DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (cart_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+CREATE TABLE comments
+(
+    comment_id   INT AUTO_INCREMENT,
+    customer_id  INT              NOT NULL,
+    product_id   INT              NOT NULL,
+    comment      TEXT             NOT NULL,
+    rating       TINYINT UNSIGNED NOT NULL,
+    comment_date DATETIME         NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (comment_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+CREATE TABLE favorites
+(
+    favorite_id   INT AUTO_INCREMENT,
+    customer_id   INT      NOT NULL,
+    product_id    INT      NOT NULL,
+    favorite_date DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (favorite_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+CREATE TABLE histories
+(
+    history_id  INT AUTO_INCREMENT,
+    customer_id INT                                      NOT NULL,
+    product_id  INT                                      NOT NULL,
+    action      ENUM ('view', 'add_to_cart', 'purchase') NOT NULL,
+    action_time DATETIME                                 NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY (history_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id),
+    FOREIGN KEY (product_id) REFERENCES products (product_id)
+);
+
+CREATE TABLE addresses_customer
+(
+    address_id    INT AUTO_INCREMENT,
+    customer_id   INT          NOT NULL,
+    country_name  VARCHAR(50)  NOT NULL,
+    province_name VARCHAR(50)  NOT NULL,
+    city_name     VARCHAR(50)  NOT NULL,
+    address       VARCHAR(100) NOT NULL,
+    PRIMARY KEY (address_id),
+    FOREIGN KEY (customer_id) REFERENCES customers (customer_id)
+);
+
+CREATE TABLE addresses_vendor
+(
+    address_id    INT AUTO_INCREMENT,
+    vendor_id     INT          NOT NULL,
+    country_name  VARCHAR(50)  NOT NULL,
+    province_name VARCHAR(50)  NOT NULL,
+    city_name     VARCHAR(50)  NOT NULL,
+    address       VARCHAR(100) NOT NULL,
+    PRIMARY KEY (address_id),
+    FOREIGN KEY (vendor_id) REFERENCES vendors (vendor_id)
+);
+
+ALTER TABLE customers ADD COLUMN avatar VARCHAR(255) NOT NULL;
+ALTER TABLE addresses_customer ADD COLUMN receiver_name VARCHAR(255) NOT NULL;
+ALTER TABLE addresses_customer ADD COLUMN receiver_phone VARCHAR(255) NOT NULL;
+
+# update customers set avatar = 'static/uploads\giphy.gif' where customer_id = 19;

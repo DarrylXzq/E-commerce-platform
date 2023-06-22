@@ -1,0 +1,147 @@
+.checkout-container {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    justify-content: space-around;
+    margin: 0 auto;
+    position: relative;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.address,
+.product-list {
+    width: 100%;
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.address-title,
+.product-title {
+    margin-bottom: 20px;
+}
+
+.title{
+    font-size: 16px;
+    font-weight: bold;
+}
+
+#s-name{
+    position: absolute;
+    top: 35px;
+    left: 200px;
+}
+
+#s-vendor{
+    position: absolute;
+    top: -12px;
+    left: -5px;
+    background-color: #705b4d;
+    color: #ffffff;
+    padding: 2px;
+    border-radius: 10px;
+
+}
+
+#s-desc{
+    position: absolute;
+    top: 60px;
+    left: 200px;
+
+}
+
+#s-price{
+    position: absolute;
+    top: 50px;
+    left: 750px;
+}
+
+#s-quantity{
+    position: absolute;
+    top: 50px;
+    left: 500px;
+}
+
+#s-discount{
+    position: absolute;
+    top: 50px;
+    left: 1100px;
+}
+
+.product-item {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 2px solid #ccc;
+    padding: 10px 0;
+    position: relative;
+    margin-bottom: 30px;
+}
+
+.product-item img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+}
+
+.product-item span {
+    flex-basis: 20%;
+    text-align: center;
+}
+
+.total-summary {
+    margin-top: auto;
+    background-color: #d2cec7;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    border-radius: 10px;
+    font-family: "Bookman Old Style", sans-serif;
+}
+
+.total-summary p {
+    margin: 10px;
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.submit-order-btn, .cancel-order-btn {
+    display: inline-block;
+    padding: 10px 20px;
+    text-align: center;
+    border-radius: 5px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+
+.cancel-order-btn {
+    background-color: #DC3545;
+    position: absolute;
+    color: #ffffff;
+    width: 100px;
+    right: 0;
+    top: 30px;
+}
+
+.submit-order-btn {
+    background-color: #007BFF;
+    position: absolute;
+    color: #ffffff;
+    width: 100px;
+    right: 110px;
+    top: 30px;
+    border: none;
+}
+
+.submit-order-btn:hover {
+    background-color: #0069D9;
+}
+
+.cancel-order-btn；hover {
+    background-color: #9a3039;
+}

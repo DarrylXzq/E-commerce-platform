@@ -1,0 +1,59 @@
+customers 表用于存储客户信息，包括客户ID、姓名、电子邮件、电话和注册日期。客户ID是主键。该表与其他表存在一对多关系。
+
+vendors 表用于存储供应商信息，包括供应商ID、名称、电子邮件、电话和注册日期。供应商ID是主键。该表与其他表存在一对多关系。
+
+addresses_customer 表用于存储客户地址信息，包括地址ID、客户ID、国家、省份、城市和详细地址。地址ID是主键，客户ID是外键，引用了客户表的主键。一个客户对应多个地址，形成一对多关系。
+
+addresses_vendor 表用于存储供应商地址信息，包括地址ID、供应商ID、国家、省份、城市和详细地址。地址ID是主键，供应商ID是外键，引用了供应商表的主键。一个供应商对应多个地址，形成一对多关系。
+
+categories 表用于存储产品分类信息，包括分类ID、分类名称、父分类ID和层级。分类ID是主键，父分类ID是外键，引用了分类表的主键。一个分类可以有多个子分类，形成一对多关系。
+
+products 表用于存储产品信息，包括产品ID、供应商ID、分类ID、名称、描述、价格、库存、图片、喜欢数、不喜欢数、促销价格、促销开始时间、促销结束时间、发布日期和产品状态。产品ID是主键，供应商ID和分类ID是外键，分别引用了供应商表和分类表的主键。一个供应商对应多个产品，一个分类对应多个产品，形成一对多关系。
+
+payment 表用于存储支付信息，包括支付ID和支付日期。支付ID是主键。该表与订单表存在一对多关系。
+
+orders 表用于存储订单信息，包括订单ID、客户ID、产品ID、数量、总金额、下单时间、支付时间、发货时间、确认时间、订单状态和支付ID。订单ID是主键，客户ID、产品ID和支付ID是外键，分别引用了客户表、产品表和支付表的主键。一个客户对应多个订单，一个产品可以包含在多个订单中，一个支付可以对应多个订单。
+
+announcements 表用于存储通知信息，包括通知ID、订单ID、内容和通知日期。通知ID是主键，订单ID是外键，引用了订单表的主键。一个订单可以对应多个通知，形成一对多关系。
+
+carts 表用于存储购物车信息，包括购物车ID、客户ID、产品ID、数量和添加时间。购物车ID是主键，客户ID和产品ID是外键，分别引用了客户表和产品表的主键。一个客户对应多个购物车项，一个产品可以在多个购物车中，形成一对多关系。
+
+comments 表用于存储评论信息，包括评论ID、客户ID、产品ID、评论内容和评论日期。评论ID是主键，客户ID和产品ID是外键，分别引用了客户表和产品表的主键。一个客户可以发表多个评论，一个产品可以收到多个评论，形成一对多关系。
+
+favorites 表用于存储收藏信息，包括收藏ID、客户ID、产品ID、喜欢按钮、不喜欢按钮和收藏日期。收藏ID是主键，客户ID和产品ID是外键，分别引用了客户表和产品表的主键。一个客户可以收藏多个产品，一个产品可以被多个客户收藏，形成一对多关系。
+
+histories 表用于存储客户浏览历史信息，包括历史ID、客户ID、产品ID和操作时间。历史ID是主键，客户ID和产品ID是外键，分别引用了客户表和产品表的主键。一个客户可以有多个浏览历史，一个产品可以被多个客户浏览，形成一对多关系。
+
+这些表共同构成了一个电子商务平台的数据库，涵盖了客户、供应商、地址、分类、产品、支付、订单、通知、购物车、评论、收藏和浏览历史等方面的信息，它们之间存在一对多、一对一等关系，以满足电商平台的各种需求。
+以上是我对你刚才中总结进行的修改，我现在需要你将我上面修改过的文本用英文写出来
+
+
+The customers table is used to store customer information, including customer ID, name, email, phone, and registration date. The customer ID is the primary key. This table has one-to-many relationships with other tables.
+
+The vendors table is used to store vendor information, including vendor ID, name, email, phone, and registration date. The vendor ID is the primary key. This table has one-to-many relationships with other tables.
+
+The addresses_customer table is used to store customer address information, including address ID, customer ID, country, province, city, and detailed address. The address ID is the primary key, and the customer ID is a foreign key, referencing the primary key of the customers table. One customer can have multiple addresses, forming a one-to-many relationship.
+
+The addresses_vendor table is used to store vendor address information, including address ID, vendor ID, country, province, city, and detailed address. The address ID is the primary key, and the vendor ID is a foreign key, referencing the primary key of the vendors table. One vendor can have multiple addresses, forming a one-to-many relationship.
+
+The categories table is used to store product category information, including category ID, category name, parent category ID, and level. The category ID is the primary key, and the parent category ID is a foreign key, referencing the primary key of the categories table. One category can have multiple subcategories, forming a one-to-many relationship.
+
+The products table is used to store product information, including product ID, vendor ID, category ID, name, description, price, stock, picture, likes, dislikes, promotion price, promotion start time, promotion end time, release date, and product status. The product ID is the primary key, and the vendor ID and category ID are foreign keys, referencing the primary keys of the vendors and categories tables, respectively. One vendor corresponds to multiple products, and one category corresponds to multiple products, forming a one-to-many relationship.
+
+The payment table is used to store payment information, including payment ID and payment date. The payment ID is the primary key. This table has a one-to-many relationship with the orders table.
+
+The orders table is used to store order information, including order ID, customer ID, product ID, quantity, total amount, order time, payment time, delivery time, confirmation time, order status, and payment ID. The order ID is the primary key, and the customer ID, product ID, and payment ID are foreign keys, referencing the primary keys of the customers, products, and payment tables, respectively. One customer corresponds to multiple orders, one product can be included in multiple orders, and one payment can correspond to multiple orders.
+
+The announcements table is used to store announcement information, including announcement ID, order ID, content, and announcement date. The announcement ID is the primary key, and the order ID is a foreign key, referencing the primary key of the orders table. One order can correspond to multiple announcements, forming a one-to-many relationship.
+
+The carts table is used to store shopping cart information, including cart ID, customer ID, product ID, quantity, and add time. The cart ID is the primary key, and the customer ID and product ID are foreign keys, referencing the primary keys of the customers and products tables, respectively. One customer corresponds to multiple cart items, and one product can be in multiple carts, forming a one-to-many relationship.
+
+The comments table is used to store comment information, including comment ID, customer ID, product ID, comment content, and comment date. The comment ID is the primary key, and the customer ID and product ID are foreign keys, referencing the primary keys of the customers and products tables, respectively. One customer can post multiple comments, and one product can receive multiple comments, forming a one-to-many relationship.
+
+The favorites table is used to store favorite information, including favorite ID, customer ID, product ID, like button, dislike button, and favorite date. The favorite ID is the primary key, and the customer ID and product ID are foreign keys, referencing the primary keys of the customers and products tables, respectively. One customer can favorite multiple products, and one product can be favorited by multiple customers, forming a one-to-many relationship.
+
+The histories table is used to store customer browsing history information, including history ID, customer ID, product ID, and action time. The history ID is the primary key, and the customer ID and product ID are foreign keys, referencing the primary keys of the customers and products tables, respectively. One customer can have multiple browsing histories, and one product can be viewed by multiple customers, forming a one-to-many relationship.
+
+These tables together form the database of an e-commerce platform, covering various aspects such as customers, vendors, addresses, categories, products, payments, orders, announcements, shopping carts, comments, favorites, and browsing history. They have relationships like one-to-many and one-to-one to meet the diverse needs of an e-commerce platform.
+
+

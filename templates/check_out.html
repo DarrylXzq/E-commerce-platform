@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, user-scalable=yes">
+    <title>check out page</title>
+    <link rel="stylesheet" href="../static/css/user_base.css">
+    <link rel="stylesheet" href="../static/css/check_out.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('#address-selector').on('change', function () {
+                const selectedAddressId = $(this).val();
+                const paymentId = '{{ payment_id }}';
+
+                $.ajax({
+                    url: '/checkout/update_address_id',
+                    type: 'POST',
+                    data: {
+                        address_id: selectedAddressId,
+                        payment_id: paymentId
+                    },
+                    success: function (response) {
+
+                    },
+                    error: function (error) {
+                    }
+                });
+            });
+        });
+
+    </script>
+    <script>
+        $(document).ready(function () {
+            $("#cancel-order-btn").click(function () {
+                $.ajax({
+                    url: "{{ url_for('checkout.cancel_order') }}",
+                    method: "POST",
+                    data: {
+                        payment_id: "{{ payment_id }}",
+                    },
+                    success: function (response) {
+                        if (response.status === "success") {
+                            window.location.href = "{{ url_for('cart.cart_page') }}";
+                        } else {
+                            alert("An error occurred while canceling the order. Please try again.");
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+</head>
+
+<body>
+<header>
+    <a href="{{ url_for('home.home_page') }}" class="logo">Logo</a>
+    <div class="nav-wrapper">
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/home.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Home</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/collection.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Collection</div>
+            </div>
+        </a>
+        <a href="{{ url_for('cart.cart_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/cart.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Cart</div>
+            </div>
+        </a>
+        <a href="{{ url_for('home.home_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/history.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">History</div>
+            </div>
+        </a>
+        <a href="{{ url_for('order.order_page') }}">
+            <div class="image-container">
+                <img src="../static/icon/navbar/order.svg" alt="Your Image Description" width="30" height="40"/>
+                <div class="hover-text">Order</div>
+            </div>
+        </a>
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('nav_user.info') }}">
+                    <img src="../static/icon/navbar/user.svg" alt="Your Image Description" width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+<div class="checkout-container">
+    <div class="address">
+        <h3 class="address-title">Shipping Address</h3>
+        <select id="address-selector">
+            {% for address in address_strings %}
+                <option value="{{ address.address_id }}">{{ address.address_str }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    <hr>
+    <div class="product-list">
+        <h3 class="product-title">Selected Products</h3>
+        {% for item in cart_items %}
+            <div class="product-item">
+                <img src="{{ item[9] }}">
+                <span id="s-name"><span class="title">Name:</span> {{ item[1] }}</span>
+                <span id="s-vendor"><span class="title">Vendor:</span> {{ item[2] }}</span>
+                <span id="s-desc"><span class="title">Desc:</span> {{ item[3] }}</span>
+                <span id="s-price"><span class="title">Unit price:</span> {{ item[4] }}</span>
+                <span id="s-quantity"><span class="title">Quantity:</span> {{ item[8] }}</span>
+                <span id="s-discount"><span
+                        class="title">Discounted price:</span> {{ (item[10]|round(2)|string) }}</span>
+            </div>
+        {% endfor %}
+    </div>
+</div>
+
+<form id="payment-form" action="{{ url_for('alipay.create_payment') }}" method="post" style="display: none;">
+    <input type="hidden" name="discounted_price" value="{{ discounted_price }}">
+    <input type="hidden" name="payment_id" value="{{ payment_id }}">
+</form>
+
+<div class="total-summary">
+    <div>
+        <p>Total amount: <span>{{ total_price }}</span></p>
+        <p>Discounted price: <span>{{ discounted_price }}</span></p>
+    </div>
+    <button class="submit-order-btn" onclick="document.getElementById('payment-form').submit();">Pay</button>
+    <button id="cancel-order-btn" class="cancel-order-btn">Cancel</button>
+</div>
+
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing
+                you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="../static/icon/footer/phone.svg" alt="phone" width="30" height="30">Phone: +86
+                13808243006
+            </p>
+            <p><img src="../static/icon/footer/email.svg" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="../static/icon/footer/facebook.svg" alt="facebook" width="30" height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="../static/icon/footer/youtube.svg" alt="youtube" width="30" height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="../static/icon/footer/instagram.svg" alt="instagram" width="30" height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="../static/icon/footer/tiktok.svg" alt="tiktok" width="30" height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>

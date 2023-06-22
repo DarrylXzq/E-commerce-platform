@@ -1,0 +1,268 @@
+{% extends 'user_edit.html' %}
+{% block css %}
+    <link rel="stylesheet" href="../static/css/user_mail.css">
+{% endblock %}
+
+{% block js %}
+    <script>
+        function submitForm() {
+            const formData = $('#update-form').serialize();
+            const ajax_index = $('#current-index')
+
+            const usernameInput = $('#username');
+            const phoneInput = $('#phone');
+            const countryInput = $('#country');
+            const provinceInput = $('#province');
+            const cityInput = $('#city');
+            const addressInput = $('#address');
+
+            $.ajax({
+                url: '/nav_user/update_mail_info',
+                method: 'POST',
+                data: formData,
+                index: ajax_index,
+                success: function (response) {
+                    // Clear previous error messages
+                    $('#username-error').text('');
+                    $('#phone-error').text('');
+                    $('#country-error').text('');
+                    $('#province-error').text('');
+                    $('#city-error').text('');
+                    $('#address-error').text('');
+
+                    // Removes the incorrect style of the input box
+                    usernameInput.removeClass('error');
+                    phoneInput.removeClass('error');
+                    countryInput.removeClass('error');
+                    provinceInput.removeClass('error');
+                    cityInput.removeClass('error');
+                    addressInput.removeClass('error');
+
+
+                    if (response.success) {
+                        window.alert('Mailing information updated successfully!');
+                        window.location.href = '/nav_user/mail_info';
+                    } else {
+                        $('input').click(function () {
+                            const inputId = $(this).attr('id');
+                            const errorId = inputId + '-error';
+                            $(this).removeClass('error error-message1 error-message2 error-message3 error-message4 error-message5 error-message6');
+                            $('#' + errorId).removeClass('show').text('').removeClass('error-message');
+                        });
+
+                        function showError(errorElement, errorMessage, inputElement) {
+                            errorElement.text(errorMessage).addClass('error-message show');
+                            inputElement.addClass('error');
+                            setTimeout(function () {
+                                errorElement.removeClass('show');
+                                setTimeout(function () {
+                                    errorElement.text('').removeClass('error-message');
+                                }, 500); // Matches the transition time in CSS
+                            }, 2500);
+                        }
+
+                        setTimeout(function () {
+                            usernameInput.removeClass('error');
+                            phoneInput.removeClass('error');
+                            countryInput.removeClass('error');
+                            provinceInput.removeClass('error');
+                            cityInput.removeClass('error');
+                            addressInput.removeClass('error');
+                        }, 2000);
+
+                        if (response.errors.username) {
+                            showError($('#username-error'), response.errors.username, usernameInput);
+                        }
+                        if (response.errors.phone) {
+                            showError($('#phone-error'), response.errors.phone, phoneInput);
+                        }
+                        if (response.errors.country) {
+                            showError($('#country-error'), response.errors.country, countryInput);
+                        }
+                        if (response.errors.province) {
+                            showError($('#province-error'), response.errors.province, provinceInput);
+                        }
+                        if (response.errors.city) {
+                            showError($('#city-error'), response.errors.city, cityInput);
+                        }
+                        if (response.errors.address) {
+                            showError($('#address-error'), response.errors.address, addressInput);
+                        }
+                    }
+                }
+            });
+        }
+    </script>
+    <script>
+        $(document).ready(function () {
+            let currentIndex = 0;
+            displayAddress(currentIndex);
+
+            $('#add_new').click(function () {
+                    // Reset the value of the input box
+                    $('#username').val('');
+                    $('#phone').val('');
+                    $('#country').val('');
+                    $('#province').val('');
+                    $('#city').val('');
+                    $('#address').val('');
+                    $('#address_id').val('');
+
+                    // Gets the total number of addresses and updates the current index
+                    $.ajax({
+                        url: '/nav_user/get_address_count',
+                        method: 'GET',
+                        success: function (response) {
+                            const addressCount = parseInt(response);
+                            currentIndex = addressCount;
+                            $('#current-index').text(currentIndex + 1);
+                        },
+                        error: function () {
+                            alert('Error: Failed to get address count.');
+                        }
+                    });
+                }
+            )
+
+
+            function displayAddress(index) {
+                $.ajax({
+                    url: '/nav_user/get_mail_info',
+                    method: 'POST',
+                    data: {index: index},
+                    success: function (response) {
+                        const address = response;
+                        $('#username').val(address[6] || '');
+                        $('#phone').val(address[7] || '');
+                        $('#country').val(address[2] || '');
+                        $('#province').val(address[3] || '');
+                        $('#city').val(address[4] || '');
+                        $('#address').val(address[5] || '');
+                        $('#address_id').val(address[0] || '');
+                        $('#current-index').text(index + 1);
+
+                    }
+                });
+            }
+
+            $('#mailing_info').click(function () {
+                displayAddress(currentIndex);
+            });
+
+            $('#prev-address').click(function () {
+                if (currentIndex > 0) {
+                    currentIndex--;
+                    displayAddress(currentIndex);
+                }
+            });
+
+            $('#next-address').click(function () {
+                currentIndex++;
+                displayAddress(currentIndex);
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#delete').click(function () {
+                const addressId = $('#address_id').val();
+                $.ajax({
+                    url: '/nav_user/delete_address',
+                    method: 'POST',
+                    data: {address_id: addressId},
+                    success: function (response) {
+                        if (response.success) {
+                            window.alert('Address deleted successfully!');
+                            window.location.href = '/nav_user/mail_info';
+                        } else {
+                            window.alert('Failed to delete address!');
+                        }
+                    }
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="table-container">
+        <form id="update-form" method="POST">
+            <div class="information">
+                <div class="table-row" id="row-1">
+                    <div class="table-cell">Receiver name:</div>
+                    <div class="table-cell"><input type="text" name="username" id="username" value="{{ receiver_name }}"
+                                                   maxlength="25"></div>
+                    <span class="error-message1" id="username-error"></span>
+                </div>
+                <div class="table-row" id="row-2">
+                    <div class="table-cell">Receiver phone:</div>
+                    <div class="table-cell"><input type="tel" name="phone" id="phone" value="{{ receiver_phone }}"
+                                                   maxlength="25">
+                    </div>
+                    <span class="error-message2" id="phone-error"></span>
+                </div>
+                <div class="table-row" id="row-3">
+                    <div class="table-cell">Country:</div>
+                    <div class="table-cell"><input type="text" name="country" id="country" value="{{ country_name }}"
+                                                   maxlength="25"></div>
+                    <span class="error-message3" id="country-error"></span>
+                </div>
+                <div class="table-row" id="row-4">
+                    <div class="table-cell">Province/State:</div>
+                    <div class="table-cell"><input type="text" name="province" id="province" value="{{ province_name }}"
+                                                   maxlength="25"></div>
+                    <span class="error-message4" id="province-error"></span>
+                </div>
+                <div class="table-row" id="row-5">
+                    <div class="table-cell">City:</div>
+                    <div class="table-cell"><input type="text" name="city" id="city" value="{{ city_name }}"
+                                                   maxlength="25"></div>
+                    <span class="error-message5" id="city-error"></span>
+                </div>
+                <div class="table-row" id="row-6">
+                    <div class="table-cell">Address:</div>
+                    <div class="table-cell"><input type="text" name="address" id="address" value="{{ address }}"
+                                                   maxlength="25"></div>
+                    <span class="error-message6" id="address-error"></span>
+                </div>
+                <div class="button-container">
+                    <button id="add_new" type="button">Add</button>
+                </div>
+                <div class="button-container">
+                    <button id="delete" type="button">Delete</button>
+                </div>
+                <div class="button-container">
+                    <button id="cancel" type="button" onclick="location.href='{{ url_for('nav_user.mail_info') }}'">
+                        Cancel
+                    </button>
+                </div>
+                <div class="button-container">
+                    <button type="button" onclick="submitForm()" id="submit">Submit</button>
+                </div>
+                <div class="button-container">
+                    <button id="mailing_info" type="button"
+                            onclick="location.href='{{ url_for('nav_user.mail_info') }}'">Mailing
+                    </button>
+                </div>
+                <div class="button-container">
+                    <button id="person_info" type="button"
+                            onclick="location.href='{{ url_for('nav_user.update_info') }}'">Personal
+                    </button>
+                </div>
+                <img src="../static/icon/information/left_dir.svg" class="hover-effect" id="prev-address"
+                     alt="Your Image Description"
+                     width="30"
+                     height="40"/>
+                <img src="../static/icon/information/right_dir.svg" class="hover-effect" id="next-address"
+                     alt="Your Image Description"
+                     width="30"
+                     height="40"/>
+                <div id="current-index"></div>
+                <input type="hidden" name="address_id" id="address_id">
+            </div>
+        </form>
+    </div>
+{% endblock %}
+
+
+

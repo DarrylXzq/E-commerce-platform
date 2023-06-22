@@ -1,0 +1,176 @@
+body{
+    background-image: url("../png/info5.png");
+    background-repeat: no-repeat;
+    background-size: cover;
+    margin: 0;
+    overflow-x: clip;
+}
+
+.container {
+    width: 80%;
+    margin-left: 300px;
+    font-family: "Bookman Old Style", sans-serif;
+    position: relative;
+}
+
+.info-box {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 80%;
+    height: 300px;
+    background-color: rgba(255, 255, 255, 0.65);
+}
+
+
+.info-box h2 {
+    margin-top: 0;
+    border-bottom: 1px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.info-box p {
+    margin: 10px 0;
+    line-height: 1.6;
+    position: relative;
+    font-weight: bold;
+}
+
+/*=============the info box=========================*/
+.info-box-notice {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 80%;
+    height: auto;
+    background-color: rgba(255, 255, 255, 0.65);
+}
+
+.announcement {
+    border: 1px solid #ddd;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    position: relative;
+    width: 100%;
+    height: 70px;
+    background-color: rgba(255, 255, 255, 0.65);
+}
+
+.date-time {
+    position: absolute;
+    right: 0;
+    top: 0;
+    font-size: 15px;
+    color: #705b4d;
+}
+
+.content {
+    position: absolute;
+    left: 5px;
+    top: 30px;
+    font-size: 17px;
+    color: #705b4d;
+}
+
+/*==============================================================*/
+
+.info-box p:first-child {
+    margin-top: 20px;
+}
+
+.info-box p:last-child {
+    margin-bottom: 0;
+}
+
+.title{
+    font-size: 25px;
+    font-family: 'MyFont', Arial, sans-serif;
+    color: #705b4d;
+}
+
+#c-name{
+    position: absolute;
+    left: 150px;
+    top: 70px;
+}
+#c-email{
+    position: absolute;
+    left: 500px;
+    top: 70px;
+}
+#c-phone{
+    position: absolute;
+    left: 150px;
+    top: 120px;
+}
+#c-country{
+    position: absolute;
+    left: 500px;
+    top: 120px;
+}
+
+#c-province{
+    position: absolute;
+    left: 150px;
+    top: 170px;
+}
+#c-city{
+    position: absolute;
+    left: 500px;
+    top: 170px;
+}
+
+#c-address{
+    position: absolute;
+    left: 150px;
+    top: 220px;
+}
+/*=========================*/
+#v-name{
+    position: absolute;
+    left: 150px;
+    top: 70px;
+}
+#v-email{
+    position: absolute;
+    left: 500px;
+    top: 70px;
+}
+#v-phone{
+    position: absolute;
+    left: 150px;
+    top: 120px;
+}
+#v-country{
+    position: absolute;
+    left: 500px;
+    top: 120px;
+}
+
+#v-province{
+    position: absolute;
+    left: 150px;
+    top: 170px;
+}
+#v-city{
+    position: absolute;
+    left: 500px;
+    top: 170px;
+}
+
+#v-address{
+    position: absolute;
+    left: 150px;
+    top: 220px;
+}
+
+
+

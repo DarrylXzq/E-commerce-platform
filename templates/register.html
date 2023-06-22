@@ -1,0 +1,181 @@
+{% extends 'login.html' %}
+{% block title %}
+    Register Page
+{% endblock %}
+{% block link %}
+    <link rel="stylesheet" href="../static/css/register.css">
+    <script>
+        $(document).ready(function () {
+            $('#login-form').on('submit', function (event) {
+                event.preventDefault();
+                const usernameInput = $('#username');
+                const passwordInput = $('#password');
+                const captchaInput = $('#captcha');
+                const userTypes = $("input[name='user_type']:checked");
+                const phoneInput = $('#phone');
+                const emailInput = $('#email');
+                const username = usernameInput.val();
+                const password = passwordInput.val();
+                const captcha = captchaInput.val();
+                const userType = userTypes.val();
+                const phone = phoneInput.val();
+                const email = emailInput.val();
+
+                $.ajax({
+                    url: '/register/check_register', // Change URL to match the register route
+                    method: 'POST',
+                    data: {
+                        username: username,
+                        password: password,
+                        captcha: captcha,
+                        user_type: userType,
+                        phone: phone,
+                        email: email
+                    },
+                    success: function (response) {
+                        // Clear previous error messages
+                        $('#username-error').text('');
+                        $('#password-error').text('');
+                        $('#captcha-error').text('');
+                        $('#user-type-error').text('');
+                        $('#phone-error').text('');
+                        $('#email-error').text('');
+
+                        // Removes the incorrect style of the input box
+                        usernameInput.removeClass('error');
+                        passwordInput.removeClass('error');
+                        captchaInput.removeClass('error');
+                        phoneInput.removeClass('error');
+                        emailInput.removeClass('error');
+
+                        if (response.success) {
+                            $('#process_bar').show();
+                            setTimeout(function () {
+                                $('#process_bar').hide();
+                                window.alert('Register successfully!')
+                                window.location.href = '/register/after_register'; // Change this URL if needed
+                            }, 2500);
+                        } else {
+                            $('input').click(function () {
+                                const inputId = $(this).attr('id');
+                                const errorId = inputId + '-error';
+                                $(this).removeClass('error error-message1 error-message2 error-message3 error-message4 error-message5 error-message6');
+                                $('#' + errorId).removeClass('show').text('').removeClass('error-message');
+                            });
+
+                            function showError(errorElement, errorMessage, inputElement) {
+                                errorElement.text(errorMessage).addClass('error-message show');
+                                inputElement.addClass('error');
+                                setTimeout(function () {
+                                    errorElement.removeClass('show');
+                                    setTimeout(function () {
+                                        errorElement.text('').removeClass('error-message');
+                                    }, 500); // Matches the transition time in CSS
+                                }, 2500);
+                            }
+
+                            if (response.errors.username) {
+                                showError($('#username-error'), response.errors.username, usernameInput);
+                            }
+                            if (response.errors.password) {
+                                showError($('#password-error'), response.errors.password, passwordInput);
+                            }
+                            if (response.errors.captcha) {
+                                showError($('#captcha-error'), response.errors.captcha, captchaInput);
+                            }
+                            if (response.errors.user_type) {
+                                showError($('#user-type-error'), response.errors.user_type, userTypes);
+                            }
+                            if (response.errors.phone) {
+                                showError($('#phone-error'), response.errors.phone, phoneInput);
+                            }
+                            if (response.errors.email) {
+                                showError($('#email-error'), response.errors.email, emailInput);
+                            }
+
+                            setTimeout(function () {
+                                usernameInput.removeClass('error');
+                                passwordInput.removeClass('error');
+                                captchaInput.removeClass('error');
+                                phoneInput.removeClass('error');
+                                emailInput.removeClass('error');
+                            }, 2000);
+                        }
+                    },
+                });
+            });
+        });
+    </script>
+{% endblock %}
+{% block input_lable %}
+    <div class="container">
+        <form class="login-form" id="login-form" novalidate>
+            <h2>Register</h2>
+            <label for="username">
+                <input type="text" name="username" placeholder="username" id="username" autocomplete="off" maxlength="25"/>
+                <img src="../static/icon/information/user.svg" alt="Your Image Description" class="input-icon"
+                     id="icon_user"/>
+            </label>
+            <span class="error-message1" id="username-error"></span>
+            <br/>
+
+            <label for="password">
+                <input type="password" name="password" placeholder="password" id="password" maxlength="25"/>
+                <img src="../static/icon/information/password.svg" alt="Your Image Description"
+                     class="input-icon"
+                     id="icon_password"/>
+            </label>
+            <span class="error-message2" id="password-error"></span>
+            <br/>
+            {#=========================================#}
+            <label for="phone">
+                <input type="text" name="phone" placeholder="phone" id="phone" maxlength="25"/>
+                <img src="../static/icon/information/phone.svg" alt="Your Image Description"
+                     class="input-icon"
+                     id="icon_phone"/>
+            </label>
+            <span class="error-message5" id="phone-error"></span>
+            <br/>
+
+            <label for="email">
+                <input type="email" name="email" placeholder="email" id="email" maxlength="40"/>
+                <img src="../static/icon/information/email.svg" alt="Your Image Description"
+                     class="input-icon"
+                     id="icon_email"/>
+            </label>
+            <span class="error-message6" id="email-error"></span>
+            <br/>
+
+            {#===============================================#}
+
+            <label for="captcha">
+                <input type="text" name="captcha" placeholder="captcha" id="captcha" maxlength="25"/>
+                <img src="../static/icon/information/captcha.svg" alt="Your Image Description"
+                     class="input-icon"
+                     id="icon_captcha"/>
+            </label>
+            <span class="error-message3" id="captcha-error"></span>
+            <br/>
+
+            <img id="captcha-image" src="{{ url_for('captcha_image') }}" alt="Captcha">
+            <button type="button" id="refresh-captcha">Refresh</button>
+
+            <div class="user-type">
+                <label id="type_user">
+                    <input type="radio" name="user_type" value="customer" maxlength="25"/>
+                    <span class="user-type-option">Customer</span>
+                </label>
+                <label id="type_vendor">
+                    <input type="radio" name="user_type" value="vendor" maxlength="25"/>
+                    <span class="user-type-option">Vendor</span>
+                </label>
+            </div>
+            <span class="error-message4" id="user-type-error"></span>
+            <img src="../static/gif/process_bar.gif" id="process_bar" style="display: none">
+            <button type="submit" id="GO_button">Register</button>
+            <a href="{{ url_for('login.login_page') }}" id="link_in_login">Already have account? click here</a>
+        </form>
+    </div>
+{% endblock %}
+
+

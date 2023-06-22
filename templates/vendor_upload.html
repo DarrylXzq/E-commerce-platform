@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=1024, user-scalable=yes">
+    <title>vendor_upload</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vendor_base.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/vendor_upload.css') }}">
+    <script>
+        {#==========side bar==============#}
+        $(document).ready(function () {
+            $('.parent').click(function () {
+                const parentAlreadySelected = $(this).hasClass('parent-selected');
+                $('.children').slideUp();
+                $('.parent').removeClass('parent-selected');
+
+                if (!parentAlreadySelected) {
+                    $(this).addClass('parent-selected');
+                    $(this).siblings('.children').slideDown();
+                }
+            });
+
+            $('.child').click(function () {
+                $('.child').removeClass('child-selected');
+                $(this).addClass('child-selected');
+            });
+        });
+    </script>
+    {% block script %}
+        <script>
+            $(document).ready(function () {
+                // Get the parent class and fill it in the parent class drop-down box
+                $.getJSON('/vendor_upload/get_parent_categories', function (parentCategories) {
+                    const $parentCategorySelect = $('#parent_category');
+                    $.each(parentCategories, function (index, parentCategory) {
+                        $('<option>', {
+                            value: parentCategory.category_id,
+                            text: parentCategory.category_name
+                        }).appendTo($parentCategorySelect);
+                    });
+
+                    $parentCategorySelect.trigger('change');
+                });
+
+                // Adds an event listener for the parent class drop-down box to request the backend to update the options for the subclass drop-down box when the selected parent class changes
+                $('#parent_category').on('change', function () {
+                    const parentId = $(this).val();
+                    $.getJSON('/vendor_upload/get_sub_categories/' + parentId, function (subCategories) {
+                        const $subCategorySelect = $('#sub_category');
+                        $subCategorySelect.empty();
+
+                        $.each(subCategories, function (index, subCategory) {
+                            $('<option>', {
+                                value: subCategory.category_id,
+                                text: subCategory.category_name
+                            }).appendTo($subCategorySelect);
+                        });
+                    });
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#image').on('change', function () {
+                    var preview = $('#preview');
+                    var file = this.files[0];
+                    var reader = new FileReader();
+
+                    reader.onloadend = function () {
+                        preview.attr('src', reader.result);
+                        preview.css('display', 'block');
+                    }
+
+                    if (file) {
+                        reader.readAsDataURL(file);
+                    } else {
+                        preview.attr('src', '');
+                        preview.css('display', 'none');
+                    }
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#product-form').on('submit', function (e) {
+                    e.preventDefault();
+                    const formData = new FormData(this);
+
+                    $.ajax({
+                        url: '/vendor_upload/upload_file',
+                        type: 'POST',
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        success: function (response) {
+                            if (response.success) {
+                                alert("Upload success!");
+                                window.location.href = "/vendor_view/view_page";
+                            } else {
+                                alert("Upload failed.");
+                            }
+                        },
+                        error: function () {
+                            alert("Upload failed.");
+                        }
+                    });
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $('#price').on('input', function () {
+                    if ($(this).val() < 0) $(this).val(0);
+                    if ($(this).val().length > 10) $(this).val($(this).val().slice(0, 10));
+                });
+
+                $('#stock').on('input', function () {
+                    if ($(this).val() < 1) $(this).val(1);
+                    if ($(this).val().length > 8) $(this).val($(this).val().slice(0, 8));
+                });
+
+                $('#promotion').on('input', function () {
+                    if ($(this).val() < 0) $(this).val(0);
+                    if ($(this).val() > 100) $(this).val(100);
+                });
+            });
+        </script>
+        <script>
+            $(document).ready(function () {
+                $("#start_date").on('keydown paste', function (e) {
+                    e.preventDefault();
+                });
+
+                $("#end_date").on('keydown paste', function (e) {
+                    e.preventDefault();
+                });
+            });
+        </script>
+    {% endblock %}
+</head>
+
+<body>
+<header>
+    <a href="{{ url_for('vendor_order.order_view') }}" class="logo">Logo</a>
+    <div class="nav-wrapper">
+        <div class="image-container">
+            <div class="dropdown-trigger">
+                <a href="{{ url_for('vendor_info.personal_info') }}">
+                    <img src="{{ url_for('static', filename='icon/navbar/user.svg') }}" alt="Your Image Description"
+                         width="30" height="40"/>
+                    <div class="hover-text">User</div>
+                </a>
+                <div class="dropdown-menu">
+                    {% if session.get('user_type') %}
+                        <a href="{{ url_for('login.logout') }}">Logout</a>
+                    {% else %}
+                        <a href="{{ url_for('login.login_page') }}">Login</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</header>
+
+<div class="contain">
+    <div class="sidebar">
+        <div class="category">
+            <div class="parent">Products</div>
+            <div class="children">
+                <div class="child"><a href="/vendor_upload/upload_page">Add</a></div>
+                <div class="child"><a href="/vendor_view/view_page">View</a></div>
+            </div>
+        </div>
+        <div class="category">
+            <div class="parent">Orders</div>
+            <div class="children">
+                <div class="child"><a href="/vendor_order/order_view">View</a></div>
+            </div>
+        </div>
+        <div class="category">
+            <div class="parent">Personal</div>
+            <div class="children">
+                <div class="child"><a href="/vendor_info/mail_page">Mailing</a></div>
+                <div class="child"><a href="/vendor_info/personal_info">Personal</a></div>
+            </div>
+        </div>
+    </div>
+    {% block content %}
+        <div class="product-form">
+            <form id="product-form" method="post" action="/vendor_upload/upload_file" enctype="multipart/form-data">
+                <label for="image">Image:</label>
+                <img id="preview" src="#" alt="Image Preview" style="display:none;max-width:200px;max-height:200px;">
+                <input type="file" id="image" name="image" accept="image/*" required>
+                <br>
+
+                <label for="name">Name:</label>
+                <input type="text" id="name" name="name" maxlength="20" required><br>
+
+                <label for="description">Description:</label>
+                <input type="text" id="description" name="description" maxlength="70" required><br>
+
+                <label for="price">Price:</label>
+                <input type="number" id="price" name="price" step="1" min="0" maxlength="10" required><br>
+
+                <label for="stock">Stock:</label>
+                <input type="number" id="stock" name="stock" step="1" min="1" maxlength="8" required><br>
+
+                <label for="status">Status:</label>
+                <select id="status" name="status" required>
+                    <option value="active">active</option>
+                    <option value="inactive">inactive</option>
+                </select><br>
+
+                <label for="promotion">Promotion:</label>
+                <input type="number" id="promotion" name="promotion" step="1" min="0" max="100" required><br>
+
+
+                <label for="start_date">Start Date:</label>
+                <input type="date" id="start_date" name="start_date" required><br>
+
+                <label for="end_date">End Date:</label>
+                <input type="date" id="end_date" name="end_date" required><br>
+
+                <label for="parent_category">Parent Category:</label>
+                <select id="parent_category" name="parent_category" required>
+                </select><br>
+
+                <label for="sub_category">Sub Category:</label>
+                <select id="sub_category" name="sub_category" required>
+                </select><br>
+
+                <input type="submit" value="Submit">
+            </form>
+        </div>
+    {% endblock %}
+</div>
+
+<footer>
+    <div class="footer-container">
+        <div class="footer-section">
+            <h3>About us</h3>
+            <p>We are an e-commerce platform focused on providing quality goods. We are committed to providing you
+                with
+                the best shopping experience.</p>
+        </div>
+        <div class="footer-section">
+            <h3>Contact us</h3>
+            <p><img src="{{ url_for('static', filename='icon/footer/phone.svg') }}" alt="phone" width="30" height="30">Phone:
+                +86 13808243006
+            </p>
+            <p><img src="{{ url_for('static', filename='icon/footer/email.svg') }}" alt="email" width="30" height="30">Email:
+                Darryl-Xiang@outlook.com</p>
+        </div>
+        <div class="footer-section">
+            <h3>Social media</h3>
+            <ul class="social-links">
+                <li><img src="{{ url_for('static', filename='icon/footer/facebook.svg') }}" alt="facebook" width="30"
+                         height="30"><a
+                        href="https://twitter.com/facebook">Facebook</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/youtube.svg') }}" alt="youtube" width="30"
+                         height="30"><a
+                        href="https://www.youtube.com/">YouTube</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/instagram.svg') }}" alt="instagram" width="30"
+                         height="30"><a
+                        href="https://www.instagram.com/">Instagram</a></li>
+                <li><img src="{{ url_for('static', filename='icon/footer/tiktok.svg') }}" alt="tiktok" width="30"
+                         height="30"><a
+                        href="https://www.tiktok.com/">TikTok</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <p>© 2023 E-commerce. All rights reserved.</p>
+    </div>
+</footer>
+</body>
+</html>
+
