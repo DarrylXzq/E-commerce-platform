@@ -34,7 +34,7 @@
 > [!NOTE]
 > 1. Clone this repository:
 >   ```sh
->   git clone https://github.com/DarrylXzq/ECommercePlatform.git
+>   git clone https://github.com/DarrylXzq/E-commerce-platform.git
 >   ```
 > 2. Set up a virtual environment and install necessary dependencies:
 > 3. Start the development server:
